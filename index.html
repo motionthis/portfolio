@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erfan Azadehnia</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:   #EEECEC;
+  --card: #D5D4CF;
+  --navy: #000B28;
+  --subtitle: rgba(40, 0, 1, 0.70);
+  --r:    26px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur:  1s;
+}
+html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
+
+#app {
+  font-family:-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  background:var(--bg);
+  width:100%; height:100vh;
+  overflow:hidden; position:relative;
+}
+
+/* ── IDENTITY PANEL ── */
+#identity {
+  position:absolute; top:0; left:0; bottom:0;
+  width:260px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:18px;
+  padding:0 28px;
+  z-index:2;
+  transform:translateX(calc(50vw - 170px));
+  transition:transform var(--dur) var(--ease);
+}
+#identity.sidebar {
+  transform:translateX(0);
+  align-items:flex-start;
+}
+
+/* Avatar */
+#av {
+  width:258px; height:317px; border-radius:37px;
+  background:#B56035;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--navy);
+  flex-shrink:0; overflow:hidden;
+  transition:width var(--dur) var(--ease),
+             height var(--dur) var(--ease),
+             border-radius var(--dur) var(--ease);
+}
+#identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
+
+#av img {
+  width:100%; height:100%;
+  object-fit:cover; display:block;
+  /* color photo — no filter */
+}
+#av span {
+  font-size:72px; font-weight:800;
+  color:rgba(255,255,255,0.7); letter-spacing:-3px;
+  transition:font-size var(--dur) var(--ease);
+}
+#identity.sidebar #av span { font-size:36px; }
+
+/* Text group */
+#text-group {
+  display:flex; flex-direction:column; gap:0;
+  align-items:center;
+}
+#identity.sidebar #text-group { align-items:flex-start; }
+
+#iname {
+  font-size:48px; font-weight:860; color:var(--navy);
+  text-align:center; line-height:1.05;
+  white-space:nowrap;
+  transition:font-size var(--dur) var(--ease);
+}
+#identity.sidebar #iname { font-size:48px; text-align:left; }
+
+#ititle {
+  font-size:48px; font-weight:860; color:var(--subtitle);
+  text-align:center; line-height:1.1; white-space:nowrap;
+  transition:font-size var(--dur) var(--ease);
+}
+#identity.sidebar #ititle { font-size:32px; text-align:center; }
+
+/* Icons row */
+#iicons {
+  display:flex; gap:22px; align-items:center;
+  justify-content:center;
+}
+#identity.sidebar #iicons { justify-content:flex-start; }
+
+/* Works label */
+#works-label {
+  font-size:18px; font-weight:800; color:var(--navy); letter-spacing:-0.2px;
+  max-height:0; overflow:hidden; opacity:0;
+  transition:max-height var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+#identity.sidebar #works-label { max-height:40px; opacity:1; }
+
+/* Icon buttons */
+.ib {
+  width:34px; height:34px; border-radius:8px;
+  border:1.5px solid rgba(0,11,40,0.18);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; text-decoration:none; flex-shrink:0;
+  transition:background 0.2s var(--ease);
+  opacity:0; transform:translateX(-14px);
+  animation:iconIn var(--dur) var(--ease) forwards;
+}
+.ib:hover { background:rgba(0,11,40,0.07); }
+.ib svg { display:block; }
+
+.ib:nth-child(1) { animation-delay:0.00s; }
+.ib:nth-child(2) { animation-delay:0.05s; }
+.ib:nth-child(3) { animation-delay:0.10s; }
+.ib:nth-child(4) { animation-delay:0.15s; }
+
+@keyframes iconIn {
+  to { opacity:1; transform:translateX(0); }
+}
+
+/* ── GRID / GALLERY ── */
+#grid {
+  position:absolute; top:0; bottom:0;
+  left:260px; right:0;
+  overflow-y:auto; overflow-x:hidden;
+  display:flex; justify-content:center; align-items:flex-start;
+  transform:translateX(100%);
+  transition:transform var(--dur) var(--ease);
+}
+#grid.show { transform:translateX(0); }
+
+#grid::-webkit-scrollbar { width:5px; }
+#grid::-webkit-scrollbar-track { background:transparent; }
+#grid::-webkit-scrollbar-thumb { background:rgba(0,11,40,0.12); border-radius:3px; }
+
+/* Masonry container — exact Figma coordinates scaled */
+#masonry {
+  position:relative;
+  width:855px;
+  height:2938px;
+  margin:20px 0 60px;
+  flex-shrink:0;
+}
+
+/* Cards — outline = outside stroke (not border) per Figma */
+.c {
+  position:absolute;
+  background:var(--card);
+  border-radius:var(--r);
+  outline:2px white solid;
+  overflow:hidden;
+  cursor:pointer;
+  opacity:0;
+  transition:opacity 0.8s var(--ease);
+}
+/* Two cards use 90% opacity white outline */
+.c[data-outline="soft"] { outline:2px rgba(255, 255, 255, 0.90) solid; }
+.c:hover { filter:brightness(0.96); }
+.c.show { opacity:1; }
+
+.c video, .c img.card-img {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  pointer-events:none;
+  border-radius:var(--r);
+}
+
+/* ── Password Input (inline, below icons) ── */
+#pw-box {
+  position:relative;
+  width:241px; height:49px;
+  max-height:0; opacity:0; overflow:hidden;
+  transition:max-height 0.5s var(--ease), opacity 0.4s var(--ease);
+}
+#pw-box.visible { max-height:60px; opacity:1; overflow:visible; }
+
+#pw-input {
+  width:241px; height:41px;
+  margin-top:4px;
+  padding:0 52px 0 14px;
+  font-size:32px; font-weight:100; font-family:'SF Pro', -apple-system, sans-serif;
+  color:rgba(0,0,0,0.85); background:white;
+  border:1px solid #B2B4BB;
+  border-radius:10px; outline:none;
+  transition:border-color 0.2s var(--ease);
+}
+#pw-input:focus { border-color:var(--navy); }
+#pw-input::placeholder { color:rgba(0,0,0,0.6); font-weight:100; }
+
+@keyframes shake {
+  0%,100% { transform:translateX(0); }
+  20%,60% { transform:translateX(-6px); }
+  40%,80% { transform:translateX(6px); }
+}
+#pw-box.shake { animation:shake 0.4s var(--ease); }
+
+#pw-btn {
+  position:absolute; right:0; top:0;
+  width:47px; height:49px;
+  display:flex; align-items:center; justify-content:center;
+  background:none; border:none;
+  cursor:pointer;
+  transition:opacity 0.2s var(--ease);
+}
+#pw-btn:hover { opacity:0.6; }
+#pw-btn svg { display:block; }
+
+#ease-tag {
+  position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+  font-size:10.5px; color:rgba(0,11,40,0.28);
+  font-family:ui-monospace,'SF Mono',monospace;
+  white-space:nowrap; pointer-events:none;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── IDENTITY ── -->
+  <div id="identity">
+
+    <div id="av">
+      <img src="Assets/portrait.jpeg" alt="Erfan Azadehnia"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <span style="display:none;">EA</span>
+    </div>
+
+    <div id="text-group">
+      <div id="iname">Erfan Azadehnia</div>
+      <div id="ititle">Sr. Motion Graphic designer</div>
+    </div>
+
+    <div id="iicons">
+      <!-- LinkedIn -->
+      <a class="ib" id="btn-li" href="https://www.linkedin.com/in/erfanazadehnia/" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 35 36" fill="none">
+          <path d="M27.708 4.375a3.333 3.333 0 0 1 2.917 2.917v20.416a3.333 3.333 0 0 1-2.917 2.917H7.292a3.333 3.333 0 0 1-2.917-2.917V7.292a3.333 3.333 0 0 1 2.917-2.917h20.416Zm-.729 22.604V19.25a4.558 4.558 0 0 0-4.558-4.754c-1.24 0-2.683.758-3.383 1.896v-1.62h-4.07v12.208h4.07v-7.19a2.083 2.083 0 1 1 4.166 0v7.19h3.775ZM10.033 12.483a2.458 2.458 0 1 0 0-4.914 2.458 2.458 0 0 0 0 4.914Zm2.028 14.496V14.773H8.02v12.206h4.04Z" fill="#000B28"/>
+        </svg>
+      </a>
+      <!-- Email -->
+      <a class="ib" id="btn-em" href="#">
+        <svg width="20" height="16" viewBox="0 0 33 26" fill="none">
+          <path d="M0 3.25C0 1.455 1.478 0 3.3 0h26.4C31.522 0 33 1.455 33 3.25v19.5C33 24.545 31.522 26 29.7 26H3.3C1.478 26 0 24.545 0 22.75V3.25Zm5.806 0L16.5 12.465 27.194 3.25H5.806ZM29.7 5.41 17.587 15.849a1.65 1.65 0 0 1-2.174 0L3.3 5.41V22.75h26.4V5.41Z" fill="#000B28"/>
+        </svg>
+      </a>
+      <!-- CV -->
+      <a class="ib" href="https://docs.google.com/document/d/1SpKWIvnQavojIAsakxFNdJD96WLiQep2rMVmg11NFPs/export?format=pdf" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <path d="M11.7 9.525a1.515 1.515 0 1 0 0-3.03 1.515 1.515 0 0 0 0 3.03Z" fill="#000B28"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7 10.035c-1.68 0-3.045 1.17-3.045 2.79v.765c0 .27.12.51.33.51h5.07c.21 0 .33-.24.33-.51v-.765c0-1.62-1.365-2.79-3.045-2.79ZM8.625 17.25c0-.65.525-1.125 1.125-1.125h10.5c.6 0 1.125.475 1.125 1.125 0 .649-.525 1.125-1.125 1.125H9.75c-.6 0-1.125-.476-1.125-1.125Zm0 4.5c0-.65.525-1.125 1.125-1.125h10.5c.6 0 1.125.475 1.125 1.125 0 .649-.525 1.125-1.125 1.125H9.75c-.6 0-1.125-.476-1.125-1.125Z" fill="#000B28"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 3.75A3 3 0 0 1 6.75.75h10.035a3 3 0 0 1 2.198.947l6.477 7.063c.538.575.79 1.326.79 2.04V26.25a3 3 0 0 1-3 3H6.75a3 3 0 0 1-3-3V3.75Zm13.034 0H6.75V26.25h16.5V10.788L16.784 3.75Z" fill="#000B28"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M16.785.75A1.5 1.5 0 0 1 18.285 2.25V9.3H24.75a1.5 1.5 0 0 1 0 3H16.785a1.5 1.5 0 0 1-1.5-1.5V2.25A1.5 1.5 0 0 1 16.785.75Z" fill="#000B28"/>
+        </svg>
+      </a>
+      <!-- Works toggle -->
+      <div class="ib" onclick="toggle()">
+        <svg width="17" height="17" viewBox="0 0 27 26" fill="none">
+          <path opacity="0.2" d="M13 .987C6.373.987 1 6.36 1 12.988S6.373 24.988 13 24.988s12-5.373 12-12S19.627.987 13 .987Z" fill="#000B28"/>
+          <path d="M26 23.988h-6.08A12.956 12.956 0 0 0 26 12.988C26 6.36 20.627.987 14 .987S2 6.36 2 12.988s5.373 12 12 12h12a1 1 0 0 0 0-2ZM2 12.988A11 11 0 1 1 24 12.988 11 11 0 0 1 2 12.988Z" fill="#000B28"/>
+          <circle cx="7" cy="13" r="2" fill="#000B28"/>
+          <circle cx="13" cy="7" r="2" fill="#000B28"/>
+          <circle cx="19" cy="13" r="2" fill="#000B28"/>
+          <circle cx="13" cy="19" r="2" fill="#000B28"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="works-label">Works</div>
+
+    <!-- Password input — inline below icons -->
+    <div id="pw-box">
+      <input id="pw-input" type="password" placeholder="Password" autocomplete="off">
+      <button id="pw-btn">
+        <svg width="29" height="27" viewBox="0 0 29 27" fill="none">
+          <path d="M2 13.5h25m0 0l-11-11m11 11l-11 11" stroke="#000" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── IMAGE GALLERY ── -->
+  <div id="grid">
+    <div id="masonry">
+
+      <!-- 1. Hero-DynamicIsland_3000 — full width top -->
+      <div class="c" style="left:0; top:0; width:854px; height:438px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Hero-DynamicIsland_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 2. DynamicIsland_GEOs — left wide -->
+      <div class="c" style="left:0; top:468px; width:394px; height:435px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/DynamicIsland_GEOs.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 3. GlassNotifcation_3000 — middle portrait -->
+      <div class="c" style="left:424px; top:468px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/GlassNotifcation_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 4. Wallet-cards_3000 — right small -->
+      <div class="c" style="left:654px; top:468px; width:200px; height:217px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Wallet-cards_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 5. Camera_4000 — right tall -->
+      <div class="c" style="left:654px; top:703px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Camera_4000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 6. Spotlight_3000 — left wide -->
+      <div class="c" style="left:0; top:933px; width:394px; height:255px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Spotlight_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 7. search_3000 — middle tall -->
+      <div class="c" style="left:423px; top:933px; width:201px; height:433px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/search_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 8. control_center_4000 — right tall -->
+      <div class="c" style="left:654px; top:1168px; width:200px; height:433px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/control_center_4000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 9. interest_2000 — left tall -->
+      <div class="c" style="left:1px; top:1218px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/interest_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 10. apps_arcade_3000 — mid-left -->
+      <div class="c" data-outline="soft" style="left:227px; top:1218px; width:167px; height:297px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/apps_arcade_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 11. LogoAppleHealthness_2000 — small square -->
+      <div class="c" style="left:424px; top:1396px; width:200px; height:201px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/LogoAppleHealthness_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 12. iMacHero_3000 — wide -->
+      <div class="c" style="left:228px; top:1631px; width:626px; height:207px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/iMacHero_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 13. WallPaper_3000 — left tall -->
+      <div class="c" style="left:1px; top:1683px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/WallPaper_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 14. ipad_hero_4000 — right wide -->
+      <div class="c" data-outline="soft" style="left:424px; top:1868px; width:431px; height:297px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/ipad_hero_4000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 15. Image Card — left tall (unnamed, needs video) -->
+      <div class="c" style="left:1px; top:2148px; width:393px; height:529px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Neo_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 16. Mirroring_3000 — right wide -->
+      <div class="c" style="left:424px; top:2195px; width:430px; height:278px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Mirroring_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 17. create-sticker_2000 — middle portrait -->
+      <div class="c" style="left:424px; top:2503px; width:200px; height:433px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/create-sticker_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 18. WritingTools_2000 — right tall -->
+      <div class="c" style="left:654px; top:2503px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/WritingTools_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Password Input ── -->
+  <div id="pw-overlay">
+    <div id="pw-box">
+      <input id="pw-input" type="password" placeholder="Password" autocomplete="off">
+      <button id="pw-btn">
+        <svg width="29" height="27" viewBox="0 0 29 27" fill="none">
+          <path d="M2 13.5h25m0 0l-11-11m11 11l-11 11" stroke="#000" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- <div id="ease-tag">cubic-bezier(0.22, 1, 0.36, 1) &nbsp;|&nbsp; 1s</div> -->
+
+</div>
+
+<script>
+(function () {
+  /* ── Email ── */
+  var u = 'motionthis';
+  var d = 'gmail.com';
+  document.getElementById('btn-em').href = 'mai' + 'lto:' + u + '@' + d;
+
+  /* ── Elements ── */
+  var identity = document.getElementById('identity');
+  var grid     = document.getElementById('grid');
+  var cards    = document.querySelectorAll('.c');
+  var open     = false;
+
+  /* ── Sort cards by top position for sequential animation ── */
+  var sortedCards = Array.from(cards).sort(function (a, b) {
+    return parseFloat(a.style.top) - parseFloat(b.style.top);
+  });
+
+  /* ── Password input elements ── */
+  var pwBox    = document.getElementById('pw-box');
+  var pwInput  = document.getElementById('pw-input');
+  var pwBtn    = document.getElementById('pw-btn');
+  var authenticated = false;
+
+  function showPassword() {
+    pwInput.value = '';
+    pwBox.classList.remove('shake');
+    pwBox.classList.add('visible');
+    setTimeout(function () { pwInput.focus(); }, 400);
+  }
+
+  function hidePassword() {
+    pwBox.classList.remove('visible');
+  }
+
+  function submitPassword() {
+    if (pwInput.value === 'Erfan') {
+      authenticated = true;
+      hidePassword();
+      openWorks();
+    } else {
+      pwInput.value = '';
+      pwBox.classList.remove('shake');
+      void pwBox.offsetWidth;
+      pwBox.classList.add('shake');
+      pwInput.focus();
+    }
+  }
+
+  pwBtn.addEventListener('click', submitPassword);
+  pwInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') submitPassword();
+  });
+
+  /* ── Open / Close works ── */
+  function openWorks() {
+    open = true;
+    identity.classList.add('sidebar');
+    grid.classList.add('show');
+
+    sortedCards.forEach(function (c, i) {
+      var delay = 300 + i * 80;
+      setTimeout(function () {
+        c.classList.add('show');
+        var v = c.querySelector('video');
+        if (v) v.play().catch(function(){});
+      }, delay);
+    });
+  }
+
+  function closeWorks() {
+    open = false;
+    hidePassword();
+    var reversed = sortedCards.slice().reverse();
+    reversed.forEach(function (c, i) {
+      var delay = i * 50;
+      setTimeout(function () { c.classList.remove('show'); }, delay);
+    });
+
+    setTimeout(function () {
+      grid.classList.remove('show');
+      identity.classList.remove('sidebar');
+    }, cards.length * 50 + 200);
+  }
+
+  /* ── Toggle ── */
+  window.toggle = function () {
+    if (!open && !authenticated) {
+      showPassword();
+      return;
+    }
+    if (!open) {
+      openWorks();
+    } else {
+      closeWorks();
+    }
+  };
+}());
+</script>
+</body>
+</html>
