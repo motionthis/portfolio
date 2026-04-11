@@ -130,7 +130,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   position:absolute; top:0; bottom:0;
   left:260px; right:0;
   overflow-y:auto; overflow-x:hidden;
-  display:flex; justify-content:center; align-items:flex-start;
+  display:flex; flex-direction:column; align-items:center;
   transform:translateX(100%);
   transition:transform var(--dur) var(--ease);
 }
@@ -212,6 +212,39 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 }
 #pw-btn:hover { opacity:0.6; }
 #pw-btn svg { display:block; }
+
+/* ── DEMO REEL ── */
+#demo-reel {
+  width:854px;
+  display:flex; flex-direction:column;
+  align-items:center;
+  gap:39px;
+  margin:60px auto 60px;
+  flex-shrink:0;
+  opacity:0;
+  transition:opacity 0.8s var(--ease);
+}
+#demo-reel.show { opacity:1; }
+
+.dr-text {
+  display:flex; flex-direction:column;
+  align-items:center;
+}
+.dr-title {
+  font-size:48px; font-weight:860;
+  color:var(--navy); text-align:center;
+}
+.dr-sub {
+  font-size:32px; font-weight:400;
+  color:rgba(40, 0, 1, 0.70); text-align:center;
+  width:816px;
+}
+.dr-video {
+  border-radius:var(--r);
+  outline:2px white solid;
+  overflow:hidden;
+  background:var(--card);
+}
 
 #ease-tag {
   position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
@@ -417,6 +450,22 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
       </div>
 
     </div>
+
+    <!-- ── DEMO REEL SECTION ── -->
+    <div id="demo-reel">
+      <div class="dr-text">
+        <div class="dr-title">Demo Reel</div>
+        <div class="dr-sub">Freelancing and Commercial video. before 2017</div>
+      </div>
+      <div class="dr-video c" style="position:relative; width:854px; height:438px;">
+        <iframe src="https://player.vimeo.com/video/247763188?autoplay=0&title=0&byline=0&portrait=0"
+                style="position:absolute; inset:0; width:100%; height:100%; border:none; border-radius:var(--r);"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+
+    </div>
   </div>
 
   <!-- ── Password Input ── -->
@@ -454,6 +503,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   });
 
   /* ── Password input elements ── */
+  var demoReel = document.getElementById('demo-reel');
+
   var pwBox    = document.getElementById('pw-box');
   var pwInput  = document.getElementById('pw-input');
   var pwBtn    = document.getElementById('pw-btn');
@@ -503,11 +554,18 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         if (v) v.play().catch(function(){});
       }, delay);
     });
+
+    /* Show Demo Reel after all cards */
+    var demoDelay = 300 + sortedCards.length * 80 + 200;
+    setTimeout(function () {
+      demoReel.classList.add('show');
+    }, demoDelay);
   }
 
   function closeWorks() {
     open = false;
     hidePassword();
+    demoReel.classList.remove('show');
     var reversed = sortedCards.slice().reverse();
     reversed.forEach(function (c, i) {
       var delay = i * 50;
