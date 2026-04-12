@@ -249,6 +249,98 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   background:var(--card);
 }
 
+/* ── MOBILE ≤480px ── */
+@media (max-width:480px) {
+  html, body { overflow:auto; height:auto; }
+  #app { overflow:auto; height:auto; position:static; }
+
+  /* Identity — full width, static, scrolls with content */
+  #identity {
+    position:static;
+    width:100%;
+    transform:none !important;
+    padding:40px 8px 30px;
+    align-items:center;
+    justify-content:center;
+  }
+  #identity.sidebar {
+    transform:none !important;
+    align-items:center;
+  }
+  #identity.sidebar #text-group { align-items:center; }
+  #identity.sidebar #iicons { justify-content:center; }
+  #identity.sidebar #iname { text-align:center; }
+  #identity.sidebar #ititle { text-align:center; }
+
+  /* Avatar — smaller on mobile */
+  #av { width:180px; height:220px; border-radius:30px; }
+  #identity.sidebar #av { width:180px; height:220px; border-radius:30px; }
+
+  /* Text — smaller on mobile */
+  #iname { font-size:36px; }
+  #identity.sidebar #iname { font-size:36px; }
+  #ititle { font-size:28px; white-space:normal; }
+  #identity.sidebar #ititle { font-size:28px; }
+
+  /* Works label always visible on mobile after toggle */
+  #works-label { font-size:16px; }
+
+  /* Password */
+  #pw-box { width:200px; }
+  #pw-input { width:200px; font-size:24px; }
+
+  /* Grid — full width, static, no slide */
+  #grid {
+    position:static;
+    left:auto; right:auto; top:auto; bottom:auto;
+    transform:none !important;
+    overflow:visible;
+    padding:0 8px;
+    display:none;
+  }
+  #grid.show { transform:none !important; display:block; }
+
+  /* Masonry — single column flow */
+  #masonry {
+    position:static;
+    width:100%;
+    height:auto;
+    padding-bottom:0;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+
+  /* Cards — static, full width */
+  .c {
+    position:static !important;
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:16/9;
+    left:auto !important;
+    top:auto !important;
+  }
+
+  .c video, .c img.card-img {
+    position:absolute; inset:0;
+  }
+
+  /* Demo Reel — full width */
+  #demo-reel {
+    width:100%;
+    margin:60px auto 0;
+    padding-bottom:40px;
+  }
+  .dr-title { font-size:32px; }
+  .dr-sub { font-size:20px; width:100%; }
+  .dr-video { width:100% !important; height:auto !important; aspect-ratio:16/9; }
+
+  /* Fade-in handled by IntersectionObserver in JS */
+  .c { opacity:0; transition:opacity 0.6s var(--ease); }
+  .c.show { opacity:1; }
+}
+
 #ease-tag {
   position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
   font-size:10.5px; color:rgba(0,11,40,0.28);
@@ -579,6 +671,34 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
       grid.classList.remove('show');
       identity.classList.remove('sidebar');
     }, cards.length * 50 + 200);
+  }
+
+  /* ── Mobile: IntersectionObserver fade-in on scroll ── */
+  var isMobile = window.matchMedia('(max-width:480px)').matches;
+  if (isMobile) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          var v = entry.target.querySelector('video');
+          if (v) v.play().catch(function(){});
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    cards.forEach(function (c) { observer.observe(c); });
+
+    /* On mobile, show grid and identity immediately after auth */
+    var origOpen = openWorks;
+    openWorks = function () {
+      open = true;
+      identity.classList.add('sidebar');
+      grid.classList.add('show');
+      grid.style.display = '';
+      demoReel.classList.add('show');
+      /* Cards will fade in via IntersectionObserver as user scrolls */
+    };
   }
 
   /* ── Toggle ── */
