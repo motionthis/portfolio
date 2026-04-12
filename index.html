@@ -131,6 +131,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   left:260px; right:0;
   overflow-y:auto; overflow-x:hidden;
   display:flex; flex-direction:column; align-items:center;
+  gap:160px;
   padding-bottom:0;
   transform:translateX(100%);
   transition:transform var(--dur) var(--ease);
@@ -146,7 +147,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   position:relative;
   width:855px;
   height:2938px;
-  margin:20px 0 60px;
+  padding-bottom:40px;
+  margin:20px 0 0;
   flex-shrink:0;
 }
 
@@ -220,7 +222,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   display:flex; flex-direction:column;
   align-items:center;
   gap:39px;
-  margin:60px auto 0;
+  margin:0 auto 0;
   flex-shrink:0;
   opacity:0;
   transition:opacity 0.8s var(--ease);
@@ -458,7 +460,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         <div class="dr-title">Demo Reel</div>
         <div class="dr-sub">Freelancing and Commercial video. before 2017</div>
       </div>
-      <div class="dr-video c" style="position:relative; width:854px; aspect-ratio:16/9;">
+      <div class="dr-video c" style="position:relative; width:854px; height:438px;">
         <iframe src="https://player.vimeo.com/video/247763188?autoplay=0&title=0&byline=0&portrait=0"
                 style="position:absolute; inset:0; width:100%; height:100%; border:none; border-radius:var(--r);"
                 allow="autoplay; fullscreen; picture-in-picture"
