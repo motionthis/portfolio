@@ -422,7 +422,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 #rigs-section {
   width:854px;
   display:flex; flex-direction:column;
-  align-items:center;
+  align-items:flex-start;
   gap:39px;
   margin:60px auto 0;
   flex-shrink:0;
@@ -434,8 +434,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 .rigs-label {
   font-size:32px; font-weight:400;
   color:rgba(40, 0, 1, 0.70);
-  text-align:center;
-  width:816px;
+  text-align:left;
   font-family:-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 }
 .rigs-grid {
@@ -444,7 +443,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   gap:30px;
 }
 .rigs-grid .c {
-  position:static;
+  position:relative;
   width:402px; height:379px;
   opacity:0;
   transition:opacity 0.8s var(--ease);
@@ -570,10 +569,10 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         </video>
       </div>
 
-      <!-- 7. Selected (SliderOver) — middle -->
+      <!-- 7. Selected — middle -->
       <div class="c" data-card="selected" style="left:423px; top:934px; width:200px; height:433px;">
         <video autoplay muted loop playsinline preload="metadata">
-          <source src="Assets/SliderOver.mp4" type="video/mp4">
+          <source src="Assets/Selected.mp4" type="video/mp4">
         </video>
       </div>
 
@@ -626,10 +625,10 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         </video>
       </div>
 
-      <!-- 15. ipad_hero_4000 — right -->
-      <div class="c" data-card="ipad-hero" data-outline="soft" style="left:424px; top:2148px; width:431px; height:297px;">
+      <!-- 15. stage-manager — right -->
+      <div class="c" data-card="stage-manager" data-outline="soft" style="left:424px; top:2148px; width:431px; height:297px;">
         <video autoplay muted loop playsinline preload="metadata">
-          <source src="Assets/ipad_hero_4000.mp4" type="video/mp4">
+          <source src="Assets/stage-manager.mp4" type="video/mp4">
         </video>
       </div>
 
