@@ -250,12 +250,77 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   background:var(--card);
 }
 
-/* ── TABLET & MOBILE (single column when sidebar+gallery can't fit with 30px gap) ── */
-@media (max-width:1400px) {
+/* ── SMALL DESKTOP / 13" SCREEN (sidebar + scaled gallery) ── */
+@media (max-width:1535px) and (min-width:1025px) {
+  #grid {
+    left: 579px;
+    right: 10px;
+  }
+  /* Gallery zoom handled by JavaScript fitGallery() */
+}
+
+/* ── TABLET / iPad (profile on top, masonry grid below) ── */
+@media (max-width:1024px) and (min-width:769px) {
   html, body { overflow:auto; height:auto; }
   #app { overflow:auto; height:auto; position:static; }
 
-  /* Identity — full width, static, scrolls with content */
+  #identity {
+    position:static;
+    width:100%;
+    transform:none !important;
+    padding:52px 8px 0;
+    align-items:center;
+    justify-content:center;
+  }
+  #identity.sidebar {
+    transform:none !important;
+    align-items:center;
+  }
+  #identity.sidebar #text-group { align-items:center; }
+  #identity.sidebar #iicons { justify-content:center; }
+  #identity.sidebar #iname { text-align:center; }
+  #identity.sidebar #ititle { text-align:center; }
+
+  #av { width:173px; height:207px; border-radius:37px; }
+  #identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
+  #iname { font-size:40px; }
+  #identity.sidebar #iname { font-size:40px; }
+  #ititle { font-size:24px; white-space:normal; }
+  #identity.sidebar #ititle { font-size:24px; }
+  #works-label { font-size:24px; }
+  #pw-box { width:200px; }
+  #pw-input { width:200px; font-size:24px; }
+
+  #grid {
+    position:static;
+    left:auto; right:auto; top:auto; bottom:auto;
+    transform:none !important;
+    overflow:visible;
+    padding:0 8px;
+    margin-top:30px;
+    display:none;
+  }
+  #grid.show { transform:none !important; display:flex; }
+
+  /* Masonry keeps absolute layout — zoom scales it to fit */
+  #masonry { margin:0 auto; }
+
+  .c[data-card="layout-small"] { display:none !important; }
+
+  #demo-reel { margin:60px auto 0; padding-bottom:40px; }
+  .dr-title { font-size:32px; }
+  .dr-sub { font-size:20px; width:100%; }
+  .dr-video { width:100% !important; aspect-ratio:16/9; }
+
+  .c { opacity:0; transition:opacity 0.6s var(--ease); }
+  .c.show { opacity:1; }
+}
+
+/* ── PHONE / iPhone (single column) ── */
+@media (max-width:768px) {
+  html, body { overflow:auto; height:auto; }
+  #app { overflow:auto; height:auto; position:static; }
+
   #identity {
     position:static;
     width:100%;
@@ -273,24 +338,16 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   #identity.sidebar #iname { text-align:center; }
   #identity.sidebar #ititle { text-align:center; }
 
-  /* Avatar — same size */
   #av { width:173px; height:207px; border-radius:37px; }
   #identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
-
-  /* Text — mobile sizes from Figma */
   #iname { font-size:40px; }
   #identity.sidebar #iname { font-size:40px; }
   #ititle { font-size:24px; white-space:normal; }
   #identity.sidebar #ititle { font-size:24px; }
-
-  /* Works label */
   #works-label { font-size:24px; }
-
-  /* Password */
   #pw-box { width:200px; }
   #pw-input { width:200px; font-size:24px; }
 
-  /* Grid — full width, static, no slide */
   #grid {
     position:static;
     left:auto; right:auto; top:auto; bottom:auto;
@@ -302,7 +359,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   }
   #grid.show { transform:none !important; display:block; }
 
-  /* Masonry — single column flow */
   #masonry {
     position:static;
     width:100%;
@@ -314,7 +370,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     gap:10px;
   }
 
-  /* Cards — static, full width */
   .c {
     position:static !important;
     width:100% !important;
@@ -322,10 +377,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     top:auto !important;
   }
 
-  /* Desktop-only cards hidden on mobile/tablet */
   .c[data-card="layout-small"] { display:none !important; }
 
-  /* Mobile card order and heights (from Figma iPhone layout) */
   .c[data-card="hero"]              { order:1;  height:193px !important; }
   .c[data-card="dynamicisland"]     { order:2;  height:435px !important; }
   .c[data-card="iphonehero"]        { order:3;  height:308px !important; }
@@ -333,7 +386,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   .c[data-card="camera"]            { order:5;  height:820px !important; }
   .c[data-card="ipadspringboard"]   { order:6;  height:295px !important; }
   .c[data-card="create-sticker"]    { order:7;  height:816px !important; }
-  .c[data-card="machero"]            { order:8;  height:433px !important; }
+  .c[data-card="machero"]           { order:8;  height:433px !important; }
   .c[data-card="ipad-hero"]         { order:9;  height:260px !important; }
   .c[data-card="interest"]          { order:10; height:820px !important; }
   .c[data-card="imachero"]          { order:11; height:207px !important; }
@@ -350,7 +403,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   .c[data-card="glass"]             { order:22; height:820px !important; }
   .c[data-card="sliderover"]        { order:23; height:433px !important; }
 
-  /* Demo Reel — full width */
   #demo-reel {
     width:100%;
     margin:60px auto 0;
@@ -360,7 +412,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   .dr-sub { font-size:20px; width:100%; }
   .dr-video { width:100% !important; aspect-ratio:16/9; }
 
-  /* Fade-in handled by IntersectionObserver in JS */
   .c { opacity:0; transition:opacity 0.6s var(--ease); }
   .c.show { opacity:1; }
 }
@@ -642,6 +693,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   var identity = document.getElementById('identity');
   var grid     = document.getElementById('grid');
   var cards    = document.querySelectorAll('#masonry > .c');
+  var masonry  = document.getElementById('masonry');
+  var demoReel = document.getElementById('demo-reel');
   var open     = false;
 
   /* ── Sort cards by top position for sequential animation ── */
@@ -650,8 +703,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   });
 
   /* ── Password input elements ── */
-  var demoReel = document.getElementById('demo-reel');
-
   var pwBox    = document.getElementById('pw-box');
   var pwInput  = document.getElementById('pw-input');
   var pwBtn    = document.getElementById('pw-btn');
@@ -687,11 +738,42 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     if (e.key === 'Enter') submitPassword();
   });
 
+  /* ── Gallery zoom — scale masonry + demo reel to fit screen ── */
+  function fitGallery() {
+    var vw = window.innerWidth;
+
+    if (vw > 1535) {
+      /* Full desktop — no zoom needed */
+      masonry.style.zoom = '';
+      demoReel.style.zoom = '';
+    } else if (vw > 1024) {
+      /* Small desktop / 13" — sidebar stays, gallery shrinks */
+      var available = vw - 579 - 10; /* 579 = sidebar right edge + 10px gap */
+      var scale = Math.min(1, available / 855);
+      masonry.style.zoom = scale;
+      demoReel.style.zoom = scale;
+    } else if (vw > 768) {
+      /* iPad — profile on top, gallery below with 8px padding */
+      var available = vw - 16;
+      var scale = Math.min(1, available / 855);
+      masonry.style.zoom = scale;
+      demoReel.style.zoom = scale;
+    } else {
+      /* iPhone — single column, no zoom */
+      masonry.style.zoom = '';
+      demoReel.style.zoom = '';
+    }
+  }
+
+  fitGallery();
+  window.addEventListener('resize', fitGallery);
+
   /* ── Open / Close works ── */
   function openWorks() {
     open = true;
     identity.classList.add('sidebar');
     grid.classList.add('show');
+    fitGallery();
 
     sortedCards.forEach(function (c, i) {
       var delay = 300 + i * 80;
@@ -725,9 +807,9 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     }, cards.length * 50 + 200);
   }
 
-  /* ── Mobile: IntersectionObserver fade-in on scroll ── */
-  var isMobile = window.matchMedia('(max-width:1400px)').matches;
-  if (isMobile) {
+  /* ── Tablet & Mobile: IntersectionObserver fade-in on scroll ── */
+  var isScrollLayout = window.matchMedia('(max-width:1024px)').matches;
+  if (isScrollLayout) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
@@ -741,14 +823,14 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
     cards.forEach(function (c) { observer.observe(c); });
 
-    /* On mobile, override openWorks for scroll-based reveal */
-    var origOpenWorks = openWorks;
+    /* Override openWorks for scroll-based reveal on tablet & phone */
     openWorks = function () {
       open = true;
       identity.classList.add('sidebar');
       grid.classList.add('show');
       demoReel.classList.add('show');
-      /* Cards will fade in via IntersectionObserver as user scrolls */
+      fitGallery();
+      /* Cards fade in via IntersectionObserver as user scrolls */
     };
   }
 
