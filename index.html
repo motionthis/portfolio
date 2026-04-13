@@ -39,7 +39,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
              bottom var(--dur) var(--ease);
 }
 #identity.sidebar {
-  transform:translateX(149px);
+  transform:translateX(var(--sidebar-x, 149px));
   align-items:flex-start;
 }
 
@@ -130,7 +130,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 /* ── GRID / GALLERY ── */
 #grid {
   position:absolute; top:0; bottom:0;
-  left:680px; right:0;
+  left:var(--grid-left, 680px); right:0;
   overflow-y:auto; overflow-x:hidden;
   display:flex; flex-direction:column; align-items:center;
   padding-bottom:0;
@@ -248,15 +248,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   outline:2px white solid;
   overflow:hidden;
   background:var(--card);
-}
-
-/* ── SMALL DESKTOP / 13" SCREEN (sidebar + scaled gallery) ── */
-@media (max-width:1535px) and (min-width:1025px) {
-  #grid {
-    left: 579px;
-    right: 10px;
-  }
-  /* Gallery zoom handled by JavaScript fitGallery() */
 }
 
 /* ── TABLET / iPad (profile on top, masonry grid below) ── */
@@ -379,29 +370,30 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
   .c[data-card="layout-small"] { display:none !important; }
 
-  .c[data-card="hero"]              { order:1;  height:193px !important; }
-  .c[data-card="dynamicisland"]     { order:2;  height:435px !important; }
-  .c[data-card="iphonehero"]        { order:3;  height:308px !important; }
-  .c[data-card="camera-beach"]      { order:4;  height:260px !important; }
-  .c[data-card="camera"]            { order:5;  height:820px !important; }
-  .c[data-card="ipadspringboard"]   { order:6;  height:295px !important; }
-  .c[data-card="create-sticker"]    { order:7;  height:816px !important; }
-  .c[data-card="machero"]           { order:8;  height:433px !important; }
-  .c[data-card="ipad-hero"]         { order:9;  height:260px !important; }
-  .c[data-card="interest"]          { order:10; height:820px !important; }
-  .c[data-card="imachero"]          { order:11; height:207px !important; }
-  .c[data-card="writingtools"]      { order:12; height:820px !important; }
-  .c[data-card="selected"]          { order:13; height:820px !important; }
-  .c[data-card="spotlight"]         { order:14; height:361px !important; }
-  .c[data-card="wallpaper"]         { order:15; height:820px !important; }
-  .c[data-card="healthness"]        { order:16; height:379px !important; border-radius:11px !important; }
-  .c[data-card="apps-arcade"]       { order:17; height:670px !important; }
-  .c[data-card="control-center"]    { order:18; height:816px !important; }
-  .c[data-card="neo"]               { order:19; height:507px !important; }
-  .c[data-card="mirroring"]         { order:20; height:504px !important; }
-  .c[data-card="wallet"]            { order:21; height:409px !important; }
-  .c[data-card="glass"]             { order:22; height:820px !important; }
-  .c[data-card="sliderover"]        { order:23; height:433px !important; }
+  /* Heights use aspect-ratio from desktop card dimensions so videos fit properly */
+  .c[data-card="hero"]              { order:1;  aspect-ratio:854/438;  height:auto !important; }
+  .c[data-card="dynamicisland"]     { order:2;  aspect-ratio:394/435;  height:auto !important; }
+  .c[data-card="iphonehero"]        { order:3;  aspect-ratio:626/487;  height:auto !important; }
+  .c[data-card="camera-beach"]      { order:4;  aspect-ratio:430/297;  height:auto !important; }
+  .c[data-card="camera"]            { order:5;  aspect-ratio:200/435;  height:auto !important; }
+  .c[data-card="ipadspringboard"]   { order:6;  aspect-ratio:393/295;  height:auto !important; }
+  .c[data-card="create-sticker"]    { order:7;  aspect-ratio:200/433;  height:auto !important; }
+  .c[data-card="machero"]           { order:8;  aspect-ratio:392/433;  height:auto !important; }
+  .c[data-card="ipad-hero"]         { order:9;  aspect-ratio:431/297;  height:auto !important; }
+  .c[data-card="interest"]          { order:10; aspect-ratio:200/435;  height:auto !important; }
+  .c[data-card="imachero"]          { order:11; aspect-ratio:853/282;  height:auto !important; }
+  .c[data-card="writingtools"]      { order:12; aspect-ratio:200/435;  height:auto !important; }
+  .c[data-card="selected"]          { order:13; aspect-ratio:200/433;  height:auto !important; }
+  .c[data-card="spotlight"]         { order:14; aspect-ratio:394/255;  height:auto !important; }
+  .c[data-card="wallpaper"]         { order:15; aspect-ratio:200/435;  height:auto !important; }
+  .c[data-card="healthness"]        { order:16; aspect-ratio:200/201;  height:auto !important; border-radius:11px !important; }
+  .c[data-card="apps-arcade"]       { order:17; aspect-ratio:167/297;  height:auto !important; }
+  .c[data-card="control-center"]    { order:18; aspect-ratio:200/433;  height:auto !important; }
+  .c[data-card="neo"]               { order:19; aspect-ratio:393/529;  height:auto !important; }
+  .c[data-card="mirroring"]         { order:20; aspect-ratio:430/278;  height:auto !important; }
+  .c[data-card="wallet"]            { order:21; aspect-ratio:207/221;  height:auto !important; }
+  .c[data-card="glass"]             { order:22; aspect-ratio:200/435;  height:auto !important; }
+  .c[data-card="sliderover"]        { order:23; aspect-ratio:578/433;  height:auto !important; }
 
   #demo-reel {
     width:100%;
@@ -495,70 +487,70 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
       <!-- 1. Hero-DynamicIsland_3000 — full width top -->
       <div class="c" data-card="hero" style="left:0; top:0; width:854px; height:438px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/Hero-DynamicIsland_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 2. DynamicIsland_GEOs — left wide -->
       <div class="c" data-card="dynamicisland" style="left:0; top:468px; width:394px; height:435px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/DynamicIsland_GEOs.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 3. GlassNotifcation_3000 — middle portrait -->
       <div class="c" data-card="glass" style="left:424px; top:468px; width:200px; height:435px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/GlassNotifcation_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 4. LayOut — right small (desktop only) -->
       <div class="c" data-card="layout-small" style="left:654px; top:468px; width:200px; height:200px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/LayOut.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 5. Camera_4000 — right tall -->
       <div class="c" data-card="camera" style="left:654px; top:703px; width:200px; height:435px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/Camera_4000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 6. Spotlight_3000 — left wide -->
       <div class="c" data-card="spotlight" style="left:0; top:933px; width:394px; height:255px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/Spotlight_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 7. Selected (SliderOver) — middle -->
       <div class="c" data-card="selected" style="left:423px; top:934px; width:200px; height:433px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/SliderOver.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 8. create-sticker_2000 — right -->
       <div class="c" data-card="create-sticker" style="left:653px; top:1164px; width:200px; height:433px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/create-sticker_2000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 9. interest_2000 — left tall -->
       <div class="c" data-card="interest" style="left:1px; top:1218px; width:200px; height:435px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/interest_2000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 10. apps_arcade_3000 — mid-left -->
       <div class="c" data-card="apps-arcade" data-outline="soft" style="left:227px; top:1218px; width:167px; height:297px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/apps_arcade_3000.mp4" type="video/mp4">
         </video>
       </div>
@@ -572,91 +564,91 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
       <!-- 12. iPhoneHero_3000 — wide -->
       <div class="c" data-card="iphonehero" style="left:228px; top:1631px; width:626px; height:487px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/iPhoneHero.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 13. WallPaper_3000 — left tall -->
       <div class="c" data-card="wallpaper" style="left:1px; top:1683px; width:200px; height:435px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/WallPaper_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 14. Image Card (Neo) — left tall -->
       <div class="c" data-card="neo" style="left:1px; top:2148px; width:393px; height:529px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/Neo_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 15. ipad_hero_4000 — right -->
       <div class="c" data-card="ipad-hero" data-outline="soft" style="left:424px; top:2148px; width:431px; height:297px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/ipad_hero_4000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 16. Mirroring_3000 — right -->
       <div class="c" data-card="mirroring" style="left:424px; top:2475px; width:430px; height:278px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/Mirroring_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 17. SliderOver — large left -->
       <div class="c" data-card="sliderover" style="left:-4px; top:2783px; width:578px; height:433px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/SliderOver.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 18. WritingTools_2000 — right -->
       <div class="c" data-card="writingtools" style="left:654px; top:2783px; width:200px; height:435px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/WritingTools_2000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 19. IpadSpringboard — left -->
       <div class="c" data-card="ipadspringboard" style="left:1px; top:3248px; width:393px; height:295px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/IpadSpringboard.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 20. Camera-beach — right -->
       <div class="c" data-card="camera-beach" style="left:424px; top:3248px; width:430px; height:297px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/Camera-beach.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 21. MacHero — left -->
       <div class="c" data-card="machero" style="left:1px; top:3573px; width:392px; height:433px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/MacHero.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 22. Wallet-cards_3000 — middle small -->
       <div class="c" data-card="wallet" style="left:417px; top:3577px; width:207px; height:221px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/Wallet-cards_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 23. control_center_4000 — right tall -->
       <div class="c" data-card="control-center" style="left:654px; top:3573px; width:200px; height:433px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/control_center_4000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 24. iMacHero_3000 — full width bottom -->
       <div class="c" data-card="imachero" style="left:1px; top:4040px; width:853px; height:282px;">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="Assets/iMacHero_3000.mp4" type="video/mp4">
         </video>
       </div>
@@ -738,28 +730,72 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     if (e.key === 'Enter') submitPassword();
   });
 
-  /* ── Gallery zoom — scale masonry + demo reel to fit screen ── */
+  /* ── Gallery fit — smart positioning + zoom ── */
   function fitGallery() {
     var vw = window.innerWidth;
+    var root = document.documentElement;
+    var idW = 420;   /* identity panel width */
+    var galW = 855;  /* masonry width */
+    var idealX = 149; /* ideal sidebar translateX */
+    var idealGap = 111; /* ideal gap: 680 - (149+420) */
+    var minGap = 8;
+    var minLeft = 8; /* minimum left margin for profile */
 
-    if (vw > 1535) {
-      /* Full desktop — no zoom needed */
-      masonry.style.zoom = '';
-      demoReel.style.zoom = '';
-    } else if (vw > 1024) {
-      /* Small desktop / 13" — sidebar stays, gallery shrinks */
-      var available = vw - 579 - 10; /* 579 = sidebar right edge + 10px gap */
-      var scale = Math.min(1, available / 855);
+    if (vw > 1024) {
+      /* ── Desktop — sidebar + gallery ── */
+
+      /* Step 1: Can everything fit at ideal positions? */
+      if (idealX + idW + idealGap + galW <= vw) {
+        root.style.setProperty('--sidebar-x', idealX + 'px');
+        root.style.setProperty('--grid-left', (idealX + idW + idealGap) + 'px');
+        masonry.style.zoom = '';
+        demoReel.style.zoom = '';
+        return;
+      }
+
+      /* Step 2: Push profile left, keep ideal gap */
+      var xForIdealGap = vw - idW - idealGap - galW;
+      if (xForIdealGap >= minLeft) {
+        root.style.setProperty('--sidebar-x', xForIdealGap + 'px');
+        root.style.setProperty('--grid-left', (xForIdealGap + idW + idealGap) + 'px');
+        masonry.style.zoom = '';
+        demoReel.style.zoom = '';
+        return;
+      }
+
+      /* Step 3: Profile at far left, shrink gap down to 8px min */
+      var rightEdge = minLeft + idW; /* 428 */
+      var spaceLeft = vw - rightEdge;
+      if (spaceLeft >= minGap + galW) {
+        root.style.setProperty('--sidebar-x', minLeft + 'px');
+        root.style.setProperty('--grid-left', (rightEdge + minGap) + 'px');
+        masonry.style.zoom = '';
+        demoReel.style.zoom = '';
+        return;
+      }
+
+      /* Step 4: Profile at far left, 8px gap, zoom gallery to fit */
+      var gridLeft = rightEdge + minGap; /* 436 */
+      var available = vw - gridLeft;
+      var scale = available / galW;
+      root.style.setProperty('--sidebar-x', minLeft + 'px');
+      root.style.setProperty('--grid-left', gridLeft + 'px');
       masonry.style.zoom = scale;
       demoReel.style.zoom = scale;
+
     } else if (vw > 768) {
-      /* iPad — profile on top, gallery below with 8px padding */
+      /* ── iPad — profile on top, gallery below ── */
+      root.style.removeProperty('--sidebar-x');
+      root.style.removeProperty('--grid-left');
       var available = vw - 16;
       var scale = Math.min(1, available / 855);
       masonry.style.zoom = scale;
       demoReel.style.zoom = scale;
+
     } else {
-      /* iPhone — single column, no zoom */
+      /* ── iPhone — single column ── */
+      root.style.removeProperty('--sidebar-x');
+      root.style.removeProperty('--grid-left');
       masonry.style.zoom = '';
       demoReel.style.zoom = '';
     }
