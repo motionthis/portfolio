@@ -250,8 +250,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   background:var(--card);
 }
 
-/* ── MOBILE ≤480px ── */
-@media (max-width:480px) {
+/* ── TABLET & MOBILE (single column when sidebar+gallery can't fit with 30px gap) ── */
+@media (max-width:1400px) {
   html, body { overflow:auto; height:auto; }
   #app { overflow:auto; height:auto; position:static; }
 
@@ -273,7 +273,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   #identity.sidebar #iname { text-align:center; }
   #identity.sidebar #ititle { text-align:center; }
 
-  /* Avatar — same size on mobile */
+  /* Avatar — same size */
   #av { width:173px; height:207px; border-radius:37px; }
   #identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
 
@@ -314,7 +314,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     gap:10px;
   }
 
-  /* Cards — static, full width, specific heights */
+  /* Cards — static, full width */
   .c {
     position:static !important;
     width:100% !important;
@@ -322,33 +322,33 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     top:auto !important;
   }
 
-  /* Desktop-only cards hidden on mobile */
+  /* Desktop-only cards hidden on mobile/tablet */
   .c[data-card="create-sticker-small"] { display:none !important; }
-  .c[data-card="ipadspringboard"] { display:none !important; }
   .c[data-card="camera-beach-right"] { display:none !important; }
 
-  /* Mobile card order and heights (from Figma) */
+  /* Mobile card order and heights (from Figma iPhone layout) */
   .c[data-card="hero"]              { order:1;  height:193px !important; }
   .c[data-card="dynamicisland"]     { order:2;  height:435px !important; }
   .c[data-card="iphonehero"]        { order:3;  height:308px !important; }
   .c[data-card="camera-beach"]      { order:4;  height:260px !important; }
   .c[data-card="camera"]            { order:5;  height:820px !important; }
-  .c[data-card="create-sticker"]    { order:6;  height:816px !important; }
-  .c[data-card="search"]            { order:7;  height:433px !important; width:392px !important; }
-  .c[data-card="ipad-hero"]         { order:8;  height:260px !important; }
-  .c[data-card="interest"]          { order:9;  height:820px !important; }
-  .c[data-card="imachero"]          { order:10; height:207px !important; }
-  .c[data-card="writingtools"]      { order:11; height:820px !important; }
-  .c[data-card="selected"]          { order:12; height:820px !important; }
-  .c[data-card="spotlight"]         { order:13; height:361px !important; }
-  .c[data-card="wallpaper"]         { order:14; height:820px !important; }
-  .c[data-card="healthness"]        { order:15; height:379px !important; border-radius:11px !important; }
-  .c[data-card="apps-arcade"]       { order:16; height:670px !important; }
-  .c[data-card="control-center"]    { order:17; height:816px !important; }
-  .c[data-card="neo"]               { order:18; height:507px !important; }
-  .c[data-card="mirroring"]         { order:19; height:504px !important; }
-  .c[data-card="wallet"]            { order:20; height:409px !important; }
-  .c[data-card="glass"]             { order:21; height:820px !important; }
+  .c[data-card="ipadspringboard"]   { order:6;  height:295px !important; }
+  .c[data-card="create-sticker"]    { order:7;  height:816px !important; }
+  .c[data-card="search"]            { order:8;  height:433px !important; }
+  .c[data-card="ipad-hero"]         { order:9;  height:260px !important; }
+  .c[data-card="interest"]          { order:10; height:820px !important; }
+  .c[data-card="imachero"]          { order:11; height:207px !important; }
+  .c[data-card="writingtools"]      { order:12; height:820px !important; }
+  .c[data-card="selected"]          { order:13; height:820px !important; }
+  .c[data-card="spotlight"]         { order:14; height:361px !important; }
+  .c[data-card="wallpaper"]         { order:15; height:820px !important; }
+  .c[data-card="healthness"]        { order:16; height:379px !important; border-radius:11px !important; }
+  .c[data-card="apps-arcade"]       { order:17; height:670px !important; }
+  .c[data-card="control-center"]    { order:18; height:816px !important; }
+  .c[data-card="neo"]               { order:19; height:507px !important; }
+  .c[data-card="mirroring"]         { order:20; height:504px !important; }
+  .c[data-card="wallet"]            { order:21; height:409px !important; }
+  .c[data-card="glass"]             { order:22; height:820px !important; }
 
   /* Demo Reel — full width */
   #demo-reel {
@@ -492,7 +492,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
       </div>
 
       <!-- 8. control_center_4000 — right -->
-      <div class="c" data-card="control-center" style="left:654px; top:1168px; width:200px; height:433px;">
+      <div class="c" data-card="control-center" style="left:653px; top:1164px; width:200px; height:433px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/control_center_4000.mp4" type="video/mp4">
         </video>
@@ -555,7 +555,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
       </div>
 
       <!-- 17. Camera-beach — large left -->
-      <div class="c" data-card="camera-beach" style="left:-4px; top:2783px; width:628px; height:433px;">
+      <div class="c" data-card="camera-beach" style="left:-4px; top:2783px; width:578px; height:433px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/Camera-beach.mp4" type="video/mp4">
         </video>
@@ -568,7 +568,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         </video>
       </div>
 
-      <!-- 19. IpadSpringboard — left (desktop only) -->
+      <!-- 19. IpadSpringboard — left -->
       <div class="c" data-card="ipadspringboard" style="left:1px; top:3248px; width:393px; height:295px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/IpadSpringboard.mp4" type="video/mp4">
@@ -590,7 +590,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
       </div>
 
       <!-- 22. Wallet-cards_3000 — middle small -->
-      <div class="c" data-card="wallet" style="left:417px; top:3577px; width:200px; height:217px;">
+      <div class="c" data-card="wallet" style="left:417px; top:3577px; width:207px; height:221px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/Wallet-cards_3000.mp4" type="video/mp4">
         </video>
@@ -618,7 +618,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         <div class="dr-title">Demo Reel</div>
         <div class="dr-sub">Freelancing and Commercial video. before 2017</div>
       </div>
-      <div class="dr-video c" style="position:relative; width:854px; aspect-ratio:16/9;">
+      <div class="dr-video" style="position:relative; width:854px; aspect-ratio:16/9;">
         <iframe src="https://player.vimeo.com/video/247763188?autoplay=0&title=0&byline=0&portrait=0"
                 style="position:absolute; inset:0; width:100%; height:100%; border:none; border-radius:var(--r);"
                 allow="autoplay; fullscreen; picture-in-picture"
@@ -726,7 +726,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   }
 
   /* ── Mobile: IntersectionObserver fade-in on scroll ── */
-  var isMobile = window.matchMedia('(max-width:480px)').matches;
+  var isMobile = window.matchMedia('(max-width:1400px)').matches;
   if (isMobile) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
