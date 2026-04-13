@@ -7,7 +7,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg:   #EEECEC;
+  --bg:   #EDECEC;
   --card: #D5D4CF;
   --navy: #000B28;
   --subtitle: rgba(40, 0, 1, 0.70);
@@ -27,17 +27,19 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 /* ── IDENTITY PANEL ── */
 #identity {
   position:absolute; top:0; left:0; bottom:0;
-  width:260px;
+  width:420px;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
   gap:18px;
   padding:0 28px;
   z-index:2;
-  transform:translateX(calc(50vw - 170px));
-  transition:transform var(--dur) var(--ease);
+  transform:translateX(calc(50vw - 210px));
+  transition:transform var(--dur) var(--ease),
+             top var(--dur) var(--ease),
+             bottom var(--dur) var(--ease);
 }
 #identity.sidebar {
-  transform:translateX(0);
+  transform:translateX(149px);
   align-items:flex-start;
 }
 
@@ -57,7 +59,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 #av img {
   width:100%; height:100%;
   object-fit:cover; display:block;
-  /* color photo — no filter */
 }
 #av span {
   font-size:72px; font-weight:800;
@@ -86,7 +87,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   text-align:center; line-height:1.1; white-space:nowrap;
   transition:font-size var(--dur) var(--ease);
 }
-#identity.sidebar #ititle { font-size:32px; text-align:center; }
+#identity.sidebar #ititle { font-size:32px; text-align:left; }
 
 /* Icons row */
 #iicons {
@@ -97,11 +98,12 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
 /* Works label */
 #works-label {
-  font-size:18px; font-weight:800; color:var(--navy); letter-spacing:-0.2px;
+  font-size:32px; font-weight:860; color:var(--navy); letter-spacing:-0.2px;
+  background:white; padding:0 5px;
   max-height:0; overflow:hidden; opacity:0;
   transition:max-height var(--dur) var(--ease), opacity var(--dur) var(--ease);
 }
-#identity.sidebar #works-label { max-height:40px; opacity:1; }
+#identity.sidebar #works-label { max-height:50px; opacity:1; }
 
 /* Icon buttons */
 .ib {
@@ -128,7 +130,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 /* ── GRID / GALLERY ── */
 #grid {
   position:absolute; top:0; bottom:0;
-  left:260px; right:0;
+  left:680px; right:0;
   overflow-y:auto; overflow-x:hidden;
   display:flex; flex-direction:column; align-items:center;
   padding-bottom:0;
@@ -141,11 +143,11 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 #grid::-webkit-scrollbar-track { background:transparent; }
 #grid::-webkit-scrollbar-thumb { background:rgba(0,11,40,0.12); border-radius:3px; }
 
-/* Masonry container — exact Figma coordinates scaled */
+/* Masonry container — exact Figma coordinates */
 #masonry {
   position:relative;
   width:855px;
-  height:2938px;
+  height:4343px;
   padding-bottom:40px;
   margin:20px 0 0;
   flex-shrink:0;
@@ -162,7 +164,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   opacity:0;
   transition:opacity 0.8s var(--ease);
 }
-/* Two cards use 90% opacity white outline */
 .c[data-outline="soft"] { outline:2px rgba(255, 255, 255, 0.90) solid; }
 .c:hover { filter:brightness(0.96); }
 .c.show { opacity:1; }
@@ -221,7 +222,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   display:flex; flex-direction:column;
   align-items:center;
   gap:39px;
-  margin:100px auto 0;
+  margin:60px auto 0;
   padding-bottom:calc(100vh - 620px);
   flex-shrink:0;
   opacity:0;
@@ -259,7 +260,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     position:static;
     width:100%;
     transform:none !important;
-    padding:40px 8px 30px;
+    padding:52px 10px 0;
     align-items:center;
     justify-content:center;
   }
@@ -272,18 +273,18 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   #identity.sidebar #iname { text-align:center; }
   #identity.sidebar #ititle { text-align:center; }
 
-  /* Avatar — smaller on mobile */
-  #av { width:180px; height:220px; border-radius:30px; }
-  #identity.sidebar #av { width:180px; height:220px; border-radius:30px; }
+  /* Avatar — same size on mobile */
+  #av { width:173px; height:207px; border-radius:37px; }
+  #identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
 
-  /* Text — smaller on mobile */
-  #iname { font-size:36px; }
-  #identity.sidebar #iname { font-size:36px; }
-  #ititle { font-size:28px; white-space:normal; }
-  #identity.sidebar #ititle { font-size:28px; }
+  /* Text — mobile sizes from Figma */
+  #iname { font-size:40px; }
+  #identity.sidebar #iname { font-size:40px; }
+  #ititle { font-size:24px; white-space:normal; }
+  #identity.sidebar #ititle { font-size:24px; }
 
-  /* Works label always visible on mobile after toggle */
-  #works-label { font-size:16px; }
+  /* Works label */
+  #works-label { font-size:24px; }
 
   /* Password */
   #pw-box { width:200px; }
@@ -296,26 +297,64 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     transform:none !important;
     overflow:visible;
     padding:0 8px;
+    margin-top:129px;
     display:none;
   }
   #grid.show { transform:none !important; display:block; }
 
-  /* Masonry — scale to fit screen */
+  /* Masonry — single column flow */
   #masonry {
-    --scale: calc((100vw - 16px) / 855);
-    width:855px;
-    height:2938px;
-    transform:scale(var(--scale));
-    transform-origin:top left;
+    position:static;
+    width:100%;
+    height:auto !important;
+    padding-bottom:0;
     margin:0;
-    margin-bottom:calc(2938px * (var(--scale) - 1));
+    display:flex;
+    flex-direction:column;
+    gap:10px;
   }
+
+  /* Cards — static, full width, specific heights */
+  .c {
+    position:static !important;
+    width:100% !important;
+    left:auto !important;
+    top:auto !important;
+  }
+
+  /* Desktop-only cards hidden on mobile */
+  .c[data-card="create-sticker-small"] { display:none !important; }
+  .c[data-card="ipadspringboard"] { display:none !important; }
+  .c[data-card="camera-beach-right"] { display:none !important; }
+
+  /* Mobile card order and heights (from Figma) */
+  .c[data-card="hero"]              { order:1;  height:193px !important; }
+  .c[data-card="dynamicisland"]     { order:2;  height:435px !important; }
+  .c[data-card="iphonehero"]        { order:3;  height:308px !important; }
+  .c[data-card="camera-beach"]      { order:4;  height:260px !important; }
+  .c[data-card="camera"]            { order:5;  height:820px !important; }
+  .c[data-card="create-sticker"]    { order:6;  height:816px !important; }
+  .c[data-card="search"]            { order:7;  height:433px !important; width:392px !important; }
+  .c[data-card="ipad-hero"]         { order:8;  height:260px !important; }
+  .c[data-card="interest"]          { order:9;  height:820px !important; }
+  .c[data-card="imachero"]          { order:10; height:207px !important; }
+  .c[data-card="writingtools"]      { order:11; height:820px !important; }
+  .c[data-card="selected"]          { order:12; height:820px !important; }
+  .c[data-card="spotlight"]         { order:13; height:361px !important; }
+  .c[data-card="wallpaper"]         { order:14; height:820px !important; }
+  .c[data-card="healthness"]        { order:15; height:379px !important; border-radius:11px !important; }
+  .c[data-card="apps-arcade"]       { order:16; height:670px !important; }
+  .c[data-card="control-center"]    { order:17; height:816px !important; }
+  .c[data-card="neo"]               { order:18; height:507px !important; }
+  .c[data-card="mirroring"]         { order:19; height:504px !important; }
+  .c[data-card="wallet"]            { order:20; height:409px !important; }
+  .c[data-card="glass"]             { order:21; height:820px !important; }
 
   /* Demo Reel — full width */
   #demo-reel {
     width:100%;
     margin:60px auto 0;
-    padding-bottom:40px;
+    padding:0 8px 40px;
   }
   .dr-title { font-size:32px; }
   .dr-sub { font-size:20px; width:100%; }
@@ -404,128 +443,170 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     <div id="masonry">
 
       <!-- 1. Hero-DynamicIsland_3000 — full width top -->
-      <div class="c" style="left:0; top:0; width:854px; height:438px;">
+      <div class="c" data-card="hero" style="left:0; top:0; width:854px; height:438px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/Hero-DynamicIsland_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 2. DynamicIsland_GEOs — left wide -->
-      <div class="c" style="left:0; top:468px; width:394px; height:435px;">
+      <div class="c" data-card="dynamicisland" style="left:0; top:468px; width:394px; height:435px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/DynamicIsland_GEOs.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 3. GlassNotifcation_3000 — middle portrait -->
-      <div class="c" style="left:424px; top:468px; width:200px; height:435px;">
+      <div class="c" data-card="glass" style="left:424px; top:468px; width:200px; height:435px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/GlassNotifcation_3000.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- 4. Wallet-cards_3000 — right small -->
-      <div class="c" style="left:654px; top:468px; width:200px; height:217px;">
+      <!-- 4. create-sticker_2000 — right small (desktop only) -->
+      <div class="c" data-card="create-sticker-small" style="left:654px; top:468px; width:200px; height:200px;">
         <video autoplay muted loop playsinline>
-          <source src="Assets/Wallet-cards_3000.mp4" type="video/mp4">
+          <source src="Assets/create-sticker_2000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 5. Camera_4000 — right tall -->
-      <div class="c" style="left:654px; top:703px; width:200px; height:435px;">
+      <div class="c" data-card="camera" style="left:654px; top:703px; width:200px; height:435px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/Camera_4000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 6. Spotlight_3000 — left wide -->
-      <div class="c" style="left:0; top:933px; width:394px; height:255px;">
+      <div class="c" data-card="spotlight" style="left:0; top:933px; width:394px; height:255px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/Spotlight_3000.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- 7. search_3000 — middle tall -->
-      <div class="c" style="left:423px; top:933px; width:201px; height:433px;">
+      <!-- 7. Selected (SliderOver) — middle -->
+      <div class="c" data-card="selected" style="left:423px; top:934px; width:200px; height:433px;">
         <video autoplay muted loop playsinline>
-          <source src="Assets/search_3000.mp4" type="video/mp4">
+          <source src="Assets/SliderOver.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- 8. control_center_4000 — right tall -->
-      <div class="c" style="left:654px; top:1168px; width:200px; height:433px;">
+      <!-- 8. control_center_4000 — right -->
+      <div class="c" data-card="control-center" style="left:654px; top:1168px; width:200px; height:433px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/control_center_4000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 9. interest_2000 — left tall -->
-      <div class="c" style="left:1px; top:1218px; width:200px; height:435px;">
+      <div class="c" data-card="interest" style="left:1px; top:1218px; width:200px; height:435px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/interest_2000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 10. apps_arcade_3000 — mid-left -->
-      <div class="c" data-outline="soft" style="left:227px; top:1218px; width:167px; height:297px;">
+      <div class="c" data-card="apps-arcade" data-outline="soft" style="left:227px; top:1218px; width:167px; height:297px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/apps_arcade_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 11. LogoAppleHealthness_2000 — small square -->
-      <div class="c" style="left:424px; top:1396px; width:200px; height:201px;">
-        <video autoplay muted loop playsinline>
+      <div class="c" data-card="healthness" style="left:424px; top:1396px; width:200px; height:201px; border-radius:11px;">
+        <video autoplay muted loop playsinline style="border-radius:11px;">
           <source src="Assets/LogoAppleHealthness_2000.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- 12. iMacHero_3000 — wide -->
-      <div class="c" style="left:228px; top:1631px; width:626px; height:207px;">
+      <!-- 12. iPhoneHero_3000 — wide -->
+      <div class="c" data-card="iphonehero" style="left:228px; top:1631px; width:626px; height:487px;">
         <video autoplay muted loop playsinline>
-          <source src="Assets/iMacHero_3000.mp4" type="video/mp4">
+          <source src="Assets/iPhoneHero_3000.mp4" type="video/mp4">
         </video>
       </div>
 
       <!-- 13. WallPaper_3000 — left tall -->
-      <div class="c" style="left:1px; top:1683px; width:200px; height:435px;">
+      <div class="c" data-card="wallpaper" style="left:1px; top:1683px; width:200px; height:435px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/WallPaper_3000.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- 14. ipad_hero_4000 — right wide -->
-      <div class="c" data-outline="soft" style="left:424px; top:1868px; width:431px; height:297px;">
-        <video autoplay muted loop playsinline>
-          <source src="Assets/ipad_hero_4000.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <!-- 15. Image Card — left tall (unnamed, needs video) -->
-      <div class="c" style="left:1px; top:2148px; width:393px; height:529px;">
+      <!-- 14. Image Card (Neo) — left tall -->
+      <div class="c" data-card="neo" style="left:1px; top:2148px; width:393px; height:529px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/Neo_3000.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- 16. Mirroring_3000 — right wide -->
-      <div class="c" style="left:424px; top:2195px; width:430px; height:278px;">
+      <!-- 15. ipad_hero_4000 — right -->
+      <div class="c" data-card="ipad-hero" data-outline="soft" style="left:424px; top:2148px; width:431px; height:297px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/ipad_hero_4000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 16. Mirroring_3000 — right -->
+      <div class="c" data-card="mirroring" style="left:424px; top:2475px; width:430px; height:278px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/Mirroring_3000.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- 17. create-sticker_2000 — middle portrait -->
-      <div class="c" style="left:424px; top:2503px; width:200px; height:433px;">
+      <!-- 17. Camera-beach — large left -->
+      <div class="c" data-card="camera-beach" style="left:-4px; top:2783px; width:628px; height:433px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Camera-beach.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 18. WritingTools_2000 — right -->
+      <div class="c" data-card="writingtools" style="left:654px; top:2783px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/WritingTools_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 19. IpadSpringboard — left (desktop only) -->
+      <div class="c" data-card="ipadspringboard" style="left:1px; top:3248px; width:393px; height:295px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/IpadSpringboard.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 20. Camera-beach — right (desktop only) -->
+      <div class="c" data-card="camera-beach-right" style="left:424px; top:3248px; width:430px; height:297px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Camera-beach.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 21. search_3000 — left -->
+      <div class="c" data-card="search" style="left:1px; top:3573px; width:392px; height:433px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/search_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 22. Wallet-cards_3000 — middle small -->
+      <div class="c" data-card="wallet" style="left:417px; top:3577px; width:200px; height:217px;">
+        <video autoplay muted loop playsinline>
+          <source src="Assets/Wallet-cards_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 23. create-sticker_2000 — right tall -->
+      <div class="c" data-card="create-sticker" style="left:640px; top:3573px; width:200px; height:433px;">
         <video autoplay muted loop playsinline>
           <source src="Assets/create-sticker_2000.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- 18. WritingTools_2000 — right tall -->
-      <div class="c" style="left:654px; top:2503px; width:200px; height:435px;">
+      <!-- 24. iMacHero_3000 — full width bottom -->
+      <div class="c" data-card="imachero" style="left:1px; top:4040px; width:853px; height:282px;">
         <video autoplay muted loop playsinline>
-          <source src="Assets/WritingTools_2000.mp4" type="video/mp4">
+          <source src="Assets/iMacHero_3000.mp4" type="video/mp4">
         </video>
       </div>
 
@@ -548,20 +629,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     </div>
   </div>
 
-  <!-- ── Password Input ── -->
-  <div id="pw-overlay">
-    <div id="pw-box">
-      <input id="pw-input" type="password" placeholder="Password" autocomplete="off">
-      <button id="pw-btn">
-        <svg width="29" height="27" viewBox="0 0 29 27" fill="none">
-          <path d="M2 13.5h25m0 0l-11-11m11 11l-11 11" stroke="#000" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- <div id="ease-tag">cubic-bezier(0.22, 1, 0.36, 1) &nbsp;|&nbsp; 1s</div> -->
-
 </div>
 
 <script>
@@ -574,7 +641,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   /* ── Elements ── */
   var identity = document.getElementById('identity');
   var grid     = document.getElementById('grid');
-  var cards    = document.querySelectorAll('.c');
+  var cards    = document.querySelectorAll('#masonry > .c');
   var open     = false;
 
   /* ── Sort cards by top position for sequential animation ── */
@@ -674,13 +741,12 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
     cards.forEach(function (c) { observer.observe(c); });
 
-    /* On mobile, show grid and identity immediately after auth */
-    var origOpen = openWorks;
+    /* On mobile, override openWorks for scroll-based reveal */
+    var origOpenWorks = openWorks;
     openWorks = function () {
       open = true;
       identity.classList.add('sidebar');
       grid.classList.add('show');
-      grid.style.display = '';
       demoReel.classList.add('show');
       /* Cards will fade in via IntersectionObserver as user scrolls */
     };
