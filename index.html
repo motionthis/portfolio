@@ -298,6 +298,11 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
   .c[data-card="layout-small"] { display:none !important; }
 
+  #rigs-section { width:100%; margin:40px auto 0; }
+  .rigs-label { font-size:20px; width:100%; }
+  .rigs-grid { width:100%; }
+  .rigs-grid .c { width:100% !important; height:auto !important; aspect-ratio:402/379; }
+
   #demo-reel { margin:60px auto 0; padding-bottom:40px; }
   .dr-title { font-size:32px; }
   .dr-sub { font-size:20px; width:100%; }
@@ -395,6 +400,11 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   .c[data-card="glass"]             { order:22; aspect-ratio:200/435;  height:auto !important; }
   .c[data-card="sliderover"]        { order:23; aspect-ratio:578/433;  height:auto !important; }
 
+  #rigs-section { width:100%; margin:40px auto 0; padding:0 8px; }
+  .rigs-label { font-size:20px; width:100%; }
+  .rigs-grid { grid-template-columns:1fr; width:100%; }
+  .rigs-grid .c { width:100% !important; height:auto !important; aspect-ratio:402/379; }
+
   #demo-reel {
     width:100%;
     margin:60px auto 0;
@@ -407,6 +417,39 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   .c { opacity:0; transition:opacity 0.6s var(--ease); }
   .c.show { opacity:1; }
 }
+
+/* ── TEMPLATE & RIGS SECTION ── */
+#rigs-section {
+  width:854px;
+  display:flex; flex-direction:column;
+  align-items:center;
+  gap:39px;
+  margin:60px auto 0;
+  flex-shrink:0;
+  opacity:0;
+  transition:opacity 0.8s var(--ease);
+}
+#rigs-section.show { opacity:1; }
+
+.rigs-label {
+  font-size:32px; font-weight:400;
+  color:rgba(40, 0, 1, 0.70);
+  text-align:center;
+  width:816px;
+  font-family:-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+.rigs-grid {
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:30px;
+}
+.rigs-grid .c {
+  position:static;
+  width:402px; height:379px;
+  opacity:0;
+  transition:opacity 0.8s var(--ease);
+}
+.rigs-grid .c.show { opacity:1; }
 
 #ease-tag {
   position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
@@ -655,6 +698,33 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
     </div>
 
+    <!-- ── TEMPLATE & RIGS SECTION ── -->
+    <div id="rigs-section">
+      <div class="rigs-label">——— Template and Rigs</div>
+      <div class="rigs-grid">
+        <div class="c" data-card="arrow-rig" style="width:402px; height:379px;">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="Assets/Arrow-Rig.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="c" data-card="shape-rig" style="width:402px; height:379px;">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="Assets/Shape.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="c" data-card="focus-rig" style="width:402px; height:379px;">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="Assets/FocusSquare_rig.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="c" data-card="loupe-rig" style="width:402px; height:379px;">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="Assets/Loupe.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
     <!-- ── DEMO REEL SECTION ── -->
     <div id="demo-reel">
       <div class="dr-text">
@@ -687,6 +757,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   var cards    = document.querySelectorAll('#masonry > .c');
   var masonry  = document.getElementById('masonry');
   var demoReel = document.getElementById('demo-reel');
+  var rigsCards = document.querySelectorAll('#rigs-section .c');
   var open     = false;
 
   /* ── Sort cards by top position for sequential animation ── */
@@ -731,6 +802,21 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   });
 
   /* ── Gallery fit — smart positioning + zoom ── */
+  var iname = document.getElementById('iname');
+  var ititle = document.getElementById('ititle');
+  var rigsSection = document.getElementById('rigs-section');
+
+  function resetText() {
+    iname.style.fontSize = '';
+    ititle.style.fontSize = '';
+  }
+
+  function shrinkText(scale) {
+    var t = Math.max(0.65, scale);
+    iname.style.fontSize = Math.round(48 * t) + 'px';
+    ititle.style.fontSize = Math.round(32 * t) + 'px';
+  }
+
   function fitGallery() {
     var vw = window.innerWidth;
     var root = document.documentElement;
@@ -738,66 +824,92 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     var galW = 855;  /* masonry width */
     var idealX = 149; /* ideal sidebar translateX */
     var idealGap = 111; /* ideal gap: 680 - (149+420) */
-    var minGap = 8;
-    var minLeft = 8; /* minimum left margin for profile */
+    var minGap = 30;  /* 30px min gap between profile & works */
+    var minLeft = 8;  /* minimum left margin for profile */
+    /* Right margin: 12px for 13" laptops, 30px for larger desktops */
+    var rightMargin = vw >= 1440 ? 30 : 12;
 
     if (vw > 1024) {
       /* ── Desktop — sidebar + gallery ── */
 
       /* Step 1: Can everything fit at ideal positions? */
-      if (idealX + idW + idealGap + galW <= vw) {
+      if (idealX + idW + idealGap + galW + rightMargin <= vw) {
         root.style.setProperty('--sidebar-x', idealX + 'px');
         root.style.setProperty('--grid-left', (idealX + idW + idealGap) + 'px');
+        grid.style.right = rightMargin + 'px';
         masonry.style.zoom = '';
         demoReel.style.zoom = '';
+        if (rigsSection) rigsSection.style.zoom = '';
+        resetText();
         return;
       }
 
       /* Step 2: Push profile left, keep ideal gap */
-      var xForIdealGap = vw - idW - idealGap - galW;
+      var xForIdealGap = vw - idW - idealGap - galW - rightMargin;
       if (xForIdealGap >= minLeft) {
         root.style.setProperty('--sidebar-x', xForIdealGap + 'px');
         root.style.setProperty('--grid-left', (xForIdealGap + idW + idealGap) + 'px');
+        grid.style.right = rightMargin + 'px';
         masonry.style.zoom = '';
         demoReel.style.zoom = '';
+        if (rigsSection) rigsSection.style.zoom = '';
+        resetText();
         return;
       }
 
-      /* Step 3: Profile at far left, shrink gap down to 8px min */
+      /* Step 3: Profile at far left, shrink gap down to 30px min */
       var rightEdge = minLeft + idW; /* 428 */
-      var spaceLeft = vw - rightEdge;
+      var spaceLeft = vw - rightEdge - rightMargin;
       if (spaceLeft >= minGap + galW) {
         root.style.setProperty('--sidebar-x', minLeft + 'px');
         root.style.setProperty('--grid-left', (rightEdge + minGap) + 'px');
+        grid.style.right = rightMargin + 'px';
         masonry.style.zoom = '';
         demoReel.style.zoom = '';
+        if (rigsSection) rigsSection.style.zoom = '';
+        resetText();
         return;
       }
 
-      /* Step 4: Profile at far left, 8px gap, zoom gallery to fit */
-      var gridLeft = rightEdge + minGap; /* 436 */
-      var available = vw - gridLeft;
+      /* Step 4: Profile at far left, 30px gap, zoom gallery to fit + shrink text */
+      var gridLeft = rightEdge + minGap;
+      var available = vw - gridLeft - rightMargin;
       var scale = available / galW;
       root.style.setProperty('--sidebar-x', minLeft + 'px');
       root.style.setProperty('--grid-left', gridLeft + 'px');
+      grid.style.right = rightMargin + 'px';
       masonry.style.zoom = scale;
       demoReel.style.zoom = scale;
+      if (rigsSection) rigsSection.style.zoom = scale;
+
+      /* Shrink profile text when gallery is being squeezed */
+      if (scale < 1) {
+        shrinkText(scale);
+      } else {
+        resetText();
+      }
 
     } else if (vw > 768) {
       /* ── iPad — profile on top, gallery below ── */
+      grid.style.right = '';
       root.style.removeProperty('--sidebar-x');
       root.style.removeProperty('--grid-left');
       var available = vw - 16;
       var scale = Math.min(1, available / 855);
       masonry.style.zoom = scale;
       demoReel.style.zoom = scale;
+      if (rigsSection) rigsSection.style.zoom = scale;
+      resetText();
 
     } else {
       /* ── iPhone — single column ── */
+      grid.style.right = '';
       root.style.removeProperty('--sidebar-x');
       root.style.removeProperty('--grid-left');
       masonry.style.zoom = '';
       demoReel.style.zoom = '';
+      if (rigsSection) rigsSection.style.zoom = '';
+      resetText();
     }
   }
 
@@ -820,8 +932,22 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
       }, delay);
     });
 
-    /* Show Demo Reel after all cards */
-    var demoDelay = 300 + sortedCards.length * 80 + 200;
+    /* Show Rigs section after masonry cards */
+    var rigsDelay = 300 + sortedCards.length * 80 + 200;
+    setTimeout(function () {
+      var rs = document.getElementById('rigs-section');
+      if (rs) rs.classList.add('show');
+      rigsCards.forEach(function (c, i) {
+        setTimeout(function () {
+          c.classList.add('show');
+          var v = c.querySelector('video');
+          if (v) v.play().catch(function(){});
+        }, i * 80);
+      });
+    }, rigsDelay);
+
+    /* Show Demo Reel after rigs */
+    var demoDelay = rigsDelay + rigsCards.length * 80 + 200;
     setTimeout(function () {
       demoReel.classList.add('show');
     }, demoDelay);
@@ -831,6 +957,9 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     open = false;
     hidePassword();
     demoReel.classList.remove('show');
+    var rs = document.getElementById('rigs-section');
+    if (rs) rs.classList.remove('show');
+    rigsCards.forEach(function (c) { c.classList.remove('show'); });
     var reversed = sortedCards.slice().reverse();
     reversed.forEach(function (c, i) {
       var delay = i * 50;
@@ -858,12 +987,15 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     }, { threshold: 0.15 });
 
     cards.forEach(function (c) { observer.observe(c); });
+    rigsCards.forEach(function (c) { observer.observe(c); });
 
     /* Override openWorks for scroll-based reveal on tablet & phone */
     openWorks = function () {
       open = true;
       identity.classList.add('sidebar');
       grid.classList.add('show');
+      var rs = document.getElementById('rigs-section');
+      if (rs) rs.classList.add('show');
       demoReel.classList.add('show');
       fitGallery();
       /* Cards fade in via IntersectionObserver as user scrolls */
