@@ -344,6 +344,53 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 }
 .rigs-grid .c.show { opacity:1; }
 
+/* ── VIDEO LIGHTBOX (tablet/phone only) ── */
+#video-modal {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.92);
+  z-index:1000;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  padding:60px 12px 20px;
+}
+#video-modal.show { display:flex; }
+
+#video-modal video {
+  width:100%;
+  max-height:calc(100vh - 90px);
+  object-fit:contain;
+  border-radius:16px;
+  background:#000;
+}
+
+#video-modal-close {
+  position:absolute;
+  top:16px; right:16px;
+  width:44px; height:44px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(10px);
+  border:none;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color:#fff;
+  font-size:24px;
+  line-height:1;
+  z-index:1001;
+  transition:background 0.2s var(--ease);
+}
+#video-modal-close:hover,
+#video-modal-close:active { background:rgba(255,255,255,0.28); }
+
+/* Visual cue — cards on tablet/phone feel tappable */
+@media (max-width:1024px) {
+  .c { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  .c:active { opacity:0.85; transition:opacity 0.1s; }
+}
+
 #ease-tag {
   position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
   font-size:10.5px; color:rgba(0,11,40,0.28);
@@ -353,6 +400,13 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 </style>
 </head>
 <body>
+
+<!-- ── VIDEO LIGHTBOX (tablet/phone) ── -->
+<div id="video-modal" role="dialog" aria-modal="true">
+  <button id="video-modal-close" aria-label="Close video">✕</button>
+  <video id="video-modal-player" controls playsinline autoplay loop></video>
+</div>
+
 <div id="app">
 
   <!-- ── IDENTITY ── -->
@@ -874,6 +928,42 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
     cards.forEach(function (c) { observer.observe(c); });
     rigsCards.forEach(function (c) { observer.observe(c); });
+
+    /* ── Video lightbox — tap a card to expand on tablet/phone ── */
+    var modal = document.getElementById('video-modal');
+    var modalPlayer = document.getElementById('video-modal-player');
+    var modalClose = document.getElementById('video-modal-close');
+
+    function openModal(src) {
+      modalPlayer.src = src;
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      modalPlayer.play().catch(function(){});
+    }
+    function closeModal() {
+      modalPlayer.pause();
+      modalPlayer.removeAttribute('src');
+      modalPlayer.load();
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function attachTap(card) {
+      card.addEventListener('click', function () {
+        var source = card.querySelector('video source');
+        if (source && source.src) openModal(source.src);
+      });
+    }
+    cards.forEach(attachTap);
+    rigsCards.forEach(attachTap);
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+    });
 
     /* Override openWorks for scroll-based reveal on tablet & phone */
     openWorks = function () {
