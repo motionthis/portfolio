@@ -251,7 +251,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 }
 
 /* ── TABLET / iPad + iPhone (profile on top, masonry grid below, scaled to fit) ── */
-@media (max-width:1024px) {
+@media (max-width:1200px) {
   html, body { overflow:auto; height:auto; }
   #app { overflow:auto; height:auto; position:static; }
 
@@ -792,7 +792,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     /* Right margin: 12px for 13" laptops, 30px for larger desktops */
     var rightMargin = vw >= 1440 ? 30 : 12;
 
-    if (vw > 1024) {
+    if (vw > 1200) {
       /* ── Desktop — sidebar + gallery ── */
 
       /* Step 1: Can everything fit at ideal positions? */
@@ -928,7 +928,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   }
 
   /* ── Tablet & Mobile: IntersectionObserver fade-in on scroll ── */
-  var isScrollLayout = window.matchMedia('(max-width:1024px)').matches;
+  var isScrollLayout = window.matchMedia('(max-width:1200px)').matches;
   if (isScrollLayout) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
