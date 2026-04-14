@@ -298,6 +298,18 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
   .c[data-card="layout-small"] { display:none !important; }
 
+  /* iPhone-specific — more bottom gap + clip Vimeo video corners */
+  @media (max-width:768px) {
+    #demo-reel { padding-bottom:50px !important; }
+    .dr-video {
+      overflow:hidden;
+      -webkit-mask-image:-webkit-radial-gradient(white, black); /* fixes iOS Safari corner clipping */
+    }
+    .dr-video iframe {
+      border-radius:var(--r) !important;
+    }
+  }
+
   #rigs-section { width:100%; margin:40px auto 0; }
   .rigs-label { font-size:20px; width:100%; }
   .rigs-grid { width:100%; }
@@ -845,7 +857,9 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
       grid.style.right = '';
       root.style.removeProperty('--sidebar-x');
       root.style.removeProperty('--grid-left');
-      var available = vw - 16;
+      /* More side-padding on small tablets/phones so the frame isn't clipped */
+      var sidePad = vw <= 820 ? 40 : 24;
+      var available = vw - sidePad;
       var scale = Math.min(1, available / 855);
       masonry.style.zoom = scale;
       demoReel.style.zoom = scale;
