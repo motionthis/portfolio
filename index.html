@@ -312,16 +312,19 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   .c.show { opacity:1; }
 }
 
-/* ── PHONE / iPhone (single column) ── */
+/* ── PHONE / iPhone (single column) — per Figma node 2080:86 ── */
 @media (max-width:768px) {
   html, body { overflow:auto; height:auto; }
-  #app { overflow:auto; height:auto; position:static; }
+  #app { overflow:auto; height:auto; position:static; padding:52px 0; }
 
   #identity {
     position:static;
     width:100%;
+    max-width:373px;
+    margin:0 auto;
     transform:none !important;
-    padding:52px 10px 0;
+    padding:0 10px;
+    gap:18px;
     align-items:center;
     justify-content:center;
   }
@@ -336,13 +339,13 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
   #av { width:173px; height:207px; border-radius:37px; }
   #identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
-  #iname { font-size:40px; }
+  #iname { font-size:40px; text-align:center; }
   #identity.sidebar #iname { font-size:40px; }
-  #ititle { font-size:24px; white-space:normal; }
+  #ititle { font-size:24px; white-space:normal; text-align:center; }
   #identity.sidebar #ititle { font-size:24px; }
   #works-label { font-size:24px; }
-  #pw-box { width:200px; }
-  #pw-input { width:200px; font-size:24px; }
+  #pw-box { width:241px; }
+  #pw-input { width:241px; font-size:24px; }
 
   #grid {
     position:static;
@@ -350,7 +353,9 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     transform:none !important;
     overflow:visible;
     padding:0 8px;
-    margin-top:129px;
+    width:100%;
+    max-width:393px;
+    margin:27px auto 0;
     display:none;
   }
   #grid.show { transform:none !important; display:block; }
@@ -373,45 +378,67 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     top:auto !important;
   }
 
-  .c[data-card="layout-small"] { display:none !important; }
+  /* Hidden on iPhone per Figma (not in mobile design) */
+  .c[data-card="layout-small"],
+  .c[data-card="machero"],
+  .c[data-card="sliderover"] { display:none !important; }
 
-  /* Heights use aspect-ratio from desktop card dimensions so videos fit properly */
-  .c[data-card="hero"]              { order:1;  aspect-ratio:854/438;  height:auto !important; }
-  .c[data-card="dynamicisland"]     { order:2;  aspect-ratio:394/435;  height:auto !important; }
-  .c[data-card="iphonehero"]        { order:3;  aspect-ratio:626/487;  height:auto !important; }
-  .c[data-card="camera-beach"]      { order:4;  aspect-ratio:430/297;  height:auto !important; }
-  .c[data-card="camera"]            { order:5;  aspect-ratio:200/435;  height:auto !important; }
-  .c[data-card="ipadspringboard"]   { order:6;  aspect-ratio:393/295;  height:auto !important; }
-  .c[data-card="create-sticker"]    { order:7;  aspect-ratio:200/433;  height:auto !important; }
-  .c[data-card="machero"]           { order:8;  aspect-ratio:392/433;  height:auto !important; }
-  .c[data-card="ipad-hero"]         { order:9;  aspect-ratio:431/297;  height:auto !important; }
-  .c[data-card="interest"]          { order:10; aspect-ratio:200/435;  height:auto !important; }
-  .c[data-card="imachero"]          { order:11; aspect-ratio:853/282;  height:auto !important; }
-  .c[data-card="writingtools"]      { order:12; aspect-ratio:200/435;  height:auto !important; }
-  .c[data-card="selected"]          { order:13; aspect-ratio:200/433;  height:auto !important; }
-  .c[data-card="spotlight"]         { order:14; aspect-ratio:394/255;  height:auto !important; }
-  .c[data-card="wallpaper"]         { order:15; aspect-ratio:200/435;  height:auto !important; }
-  .c[data-card="healthness"]        { order:16; aspect-ratio:200/201;  height:auto !important; border-radius:11px !important; }
-  .c[data-card="apps-arcade"]       { order:17; aspect-ratio:167/297;  height:auto !important; }
-  .c[data-card="control-center"]    { order:18; aspect-ratio:200/433;  height:auto !important; }
-  .c[data-card="neo"]               { order:19; aspect-ratio:393/529;  height:auto !important; }
-  .c[data-card="mirroring"]         { order:20; aspect-ratio:430/278;  height:auto !important; }
-  .c[data-card="wallet"]            { order:21; aspect-ratio:207/221;  height:auto !important; }
-  .c[data-card="glass"]             { order:22; aspect-ratio:200/435;  height:auto !important; }
-  .c[data-card="sliderover"]        { order:23; aspect-ratio:578/433;  height:auto !important; }
+  /* Heights use aspect-ratio from Figma iPhone frame dimensions */
+  .c[data-card="hero"]              { order:1;  aspect-ratio:377/193;  height:auto !important; }
+  .c[data-card="dynamicisland"]     { order:2;  aspect-ratio:377/435;  height:auto !important; }
+  .c[data-card="iphonehero"]        { order:3;  aspect-ratio:377/308;  height:auto !important; }
+  .c[data-card="camera-beach"]      { order:4;  aspect-ratio:377/260;  height:auto !important; }
+  .c[data-card="camera"]            { order:5;  aspect-ratio:377/820;  height:auto !important; }
+  .c[data-card="ipadspringboard"]   { order:6;  aspect-ratio:377/295;  height:auto !important; }
+  .c[data-card="create-sticker"]    { order:7;  aspect-ratio:377/816;  height:auto !important; }
+  .c[data-card="stage-manager"]     { order:8;  aspect-ratio:377/212;  height:auto !important; }
+  .c[data-card="interest"]          { order:10; aspect-ratio:377/820;  height:auto !important; }
+  .c[data-card="imachero"]          { order:11; aspect-ratio:375/207;  height:auto !important; }
+  .c[data-card="writingtools"]      { order:12; aspect-ratio:377/820;  height:auto !important; }
+  .c[data-card="selected"]          { order:13; aspect-ratio:377/820;  height:auto !important; }
+  .c[data-card="spotlight"]         { order:14; aspect-ratio:377/361;  height:auto !important; }
+  .c[data-card="wallpaper"]         { order:15; aspect-ratio:377/820;  height:auto !important; }
+  .c[data-card="healthness"]        { order:16; aspect-ratio:377/379;  height:auto !important; border-radius:11px !important; }
+  .c[data-card="apps-arcade"]       { order:17; aspect-ratio:377/670;  height:auto !important; }
+  .c[data-card="control-center"]    { order:18; aspect-ratio:377/816;  height:auto !important; }
+  .c[data-card="neo"]               { order:19; aspect-ratio:377/507;  height:auto !important; }
+  .c[data-card="mirroring"]         { order:20; aspect-ratio:377/504;  height:auto !important; }
+  .c[data-card="wallet"]            { order:21; aspect-ratio:377/409;  height:auto !important; }
+  .c[data-card="glass"]             { order:22; aspect-ratio:377/820;  height:auto !important; }
 
-  #rigs-section { width:100%; margin:40px auto 0; padding:0 8px; }
-  .rigs-label { font-size:20px; width:100%; }
-  .rigs-grid { grid-template-columns:1fr; width:100%; }
-  .rigs-grid .c { width:100% !important; height:auto !important; aspect-ratio:402/379; }
+  #rigs-section {
+    width:100%;
+    max-width:393px;
+    margin:27px auto 0;
+    padding:0 8px;
+    gap:39px;
+    align-items:center;
+  }
+  .rigs-label {
+    font-size:32px;
+    text-align:center;
+    width:auto;
+  }
+  .rigs-grid {
+    grid-template-columns:1fr;
+    gap:10px;
+    width:100%;
+  }
+  .rigs-grid .c {
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:381/359;
+  }
 
   #demo-reel {
     width:100%;
-    margin:60px auto 0;
+    max-width:393px;
+    margin:27px auto 0;
     padding:0 8px 40px;
+    gap:18px;
   }
-  .dr-title { font-size:32px; }
-  .dr-sub { font-size:20px; width:100%; }
+  .dr-title { font-size:48px; }
+  .dr-sub { font-size:24px; width:100%; }
   .dr-video { width:100% !important; aspect-ratio:16/9; }
 
   .c { opacity:0; transition:opacity 0.6s var(--ease); }
@@ -731,9 +758,12 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         <div class="dr-sub">Freelancing and Commercial video. before 2017</div>
       </div>
       <div class="dr-video" style="position:relative; width:854px; aspect-ratio:16/9;">
-        <iframe src="https://player.vimeo.com/video/247763188?autoplay=0&title=0&byline=0&portrait=0"
+        <iframe src="https://player.vimeo.com/video/247763188?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;background=0&amp;playsinline=1"
                 style="position:absolute; inset:0; width:100%; height:100%; border:none; border-radius:var(--r);"
-                allow="autoplay; fullscreen; picture-in-picture"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Demo Reel"
                 allowfullscreen></iframe>
       </div>
     </div>
