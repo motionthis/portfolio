@@ -250,8 +250,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   background:var(--card);
 }
 
-/* ── TABLET / iPad (profile on top, masonry grid below) ── */
-@media (max-width:1024px) and (min-width:769px) {
+/* ── TABLET / iPad + iPhone (profile on top, masonry grid below, scaled to fit) ── */
+@media (max-width:1024px) {
   html, body { overflow:auto; height:auto; }
   #app { overflow:auto; height:auto; position:static; }
 
@@ -306,139 +306,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   #demo-reel { margin:60px auto 0; padding-bottom:40px; }
   .dr-title { font-size:32px; }
   .dr-sub { font-size:20px; width:100%; }
-  .dr-video { width:100% !important; aspect-ratio:16/9; }
-
-  .c { opacity:0; transition:opacity 0.6s var(--ease); }
-  .c.show { opacity:1; }
-}
-
-/* ── PHONE / iPhone (single column) — per Figma node 2080:86 ── */
-@media (max-width:768px) {
-  html, body { overflow:auto; height:auto; }
-  #app { overflow:auto; height:auto; position:static; padding:52px 0; }
-
-  #identity {
-    position:static;
-    width:100%;
-    max-width:373px;
-    margin:0 auto;
-    transform:none !important;
-    padding:0 10px;
-    gap:18px;
-    align-items:center;
-    justify-content:center;
-  }
-  #identity.sidebar {
-    transform:none !important;
-    align-items:center;
-  }
-  #identity.sidebar #text-group { align-items:center; }
-  #identity.sidebar #iicons { justify-content:center; }
-  #identity.sidebar #iname { text-align:center; }
-  #identity.sidebar #ititle { text-align:center; }
-
-  #av { width:173px; height:207px; border-radius:37px; }
-  #identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
-  #iname { font-size:40px; text-align:center; }
-  #identity.sidebar #iname { font-size:40px; }
-  #ititle { font-size:24px; white-space:normal; text-align:center; }
-  #identity.sidebar #ititle { font-size:24px; }
-  #works-label { font-size:24px; }
-  #pw-box { width:241px; }
-  #pw-input { width:241px; font-size:24px; }
-
-  #grid {
-    position:static;
-    left:auto; right:auto; top:auto; bottom:auto;
-    transform:none !important;
-    overflow:visible;
-    padding:0 8px;
-    width:100%;
-    max-width:393px;
-    margin:27px auto 0;
-    display:none;
-  }
-  #grid.show { transform:none !important; display:block; }
-
-  #masonry {
-    position:static;
-    width:100%;
-    height:auto !important;
-    padding-bottom:0;
-    margin:0;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-  }
-
-  .c {
-    position:static !important;
-    width:100% !important;
-    left:auto !important;
-    top:auto !important;
-  }
-
-  /* Hidden on iPhone per Figma (not in mobile design) */
-  .c[data-card="layout-small"],
-  .c[data-card="machero"],
-  .c[data-card="sliderover"] { display:none !important; }
-
-  /* Heights use aspect-ratio from Figma iPhone frame dimensions */
-  .c[data-card="hero"]              { order:1;  aspect-ratio:377/193;  height:auto !important; }
-  .c[data-card="dynamicisland"]     { order:2;  aspect-ratio:377/435;  height:auto !important; }
-  .c[data-card="iphonehero"]        { order:3;  aspect-ratio:377/308;  height:auto !important; }
-  .c[data-card="camera-beach"]      { order:4;  aspect-ratio:377/260;  height:auto !important; }
-  .c[data-card="camera"]            { order:5;  aspect-ratio:377/820;  height:auto !important; }
-  .c[data-card="ipadspringboard"]   { order:6;  aspect-ratio:377/295;  height:auto !important; }
-  .c[data-card="create-sticker"]    { order:7;  aspect-ratio:377/816;  height:auto !important; }
-  .c[data-card="stage-manager"]     { order:8;  aspect-ratio:377/212;  height:auto !important; }
-  .c[data-card="interest"]          { order:10; aspect-ratio:377/820;  height:auto !important; }
-  .c[data-card="imachero"]          { order:11; aspect-ratio:375/207;  height:auto !important; }
-  .c[data-card="writingtools"]      { order:12; aspect-ratio:377/820;  height:auto !important; }
-  .c[data-card="selected"]          { order:13; aspect-ratio:377/820;  height:auto !important; }
-  .c[data-card="spotlight"]         { order:14; aspect-ratio:377/361;  height:auto !important; }
-  .c[data-card="wallpaper"]         { order:15; aspect-ratio:377/820;  height:auto !important; }
-  .c[data-card="healthness"]        { order:16; aspect-ratio:377/379;  height:auto !important; border-radius:11px !important; }
-  .c[data-card="apps-arcade"]       { order:17; aspect-ratio:377/670;  height:auto !important; }
-  .c[data-card="control-center"]    { order:18; aspect-ratio:377/816;  height:auto !important; }
-  .c[data-card="neo"]               { order:19; aspect-ratio:377/507;  height:auto !important; }
-  .c[data-card="mirroring"]         { order:20; aspect-ratio:377/504;  height:auto !important; }
-  .c[data-card="wallet"]            { order:21; aspect-ratio:377/409;  height:auto !important; }
-  .c[data-card="glass"]             { order:22; aspect-ratio:377/820;  height:auto !important; }
-
-  #rigs-section {
-    width:100%;
-    max-width:393px;
-    margin:27px auto 0;
-    padding:0 8px;
-    gap:39px;
-    align-items:center;
-  }
-  .rigs-label {
-    font-size:32px;
-    text-align:center;
-    width:auto;
-  }
-  .rigs-grid {
-    grid-template-columns:1fr;
-    gap:10px;
-    width:100%;
-  }
-  .rigs-grid .c {
-    width:100% !important;
-    height:auto !important;
-    aspect-ratio:381/359;
-  }
-
-  #demo-reel {
-    width:100%;
-    max-width:393px;
-    margin:27px auto 0;
-    padding:0 8px 40px;
-    gap:18px;
-  }
-  .dr-title { font-size:48px; }
-  .dr-sub { font-size:24px; width:100%; }
   .dr-video { width:100% !important; aspect-ratio:16/9; }
 
   .c { opacity:0; transition:opacity 0.6s var(--ease); }
@@ -918,8 +785,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         resetText();
       }
 
-    } else if (vw > 768) {
-      /* ── iPad — profile on top, gallery below ── */
+    } else {
+      /* ── iPad + iPhone — profile on top, gallery below, zoom to fit ── */
       grid.style.right = '';
       root.style.removeProperty('--sidebar-x');
       root.style.removeProperty('--grid-left');
@@ -928,16 +795,6 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
       masonry.style.zoom = scale;
       demoReel.style.zoom = scale;
       if (rigsSection) rigsSection.style.zoom = scale;
-      resetText();
-
-    } else {
-      /* ── iPhone — single column ── */
-      grid.style.right = '';
-      root.style.removeProperty('--sidebar-x');
-      root.style.removeProperty('--grid-left');
-      masonry.style.zoom = '';
-      demoReel.style.zoom = '';
-      if (rigsSection) rigsSection.style.zoom = '';
       resetText();
     }
   }
