@@ -21,47 +21,61 @@
     cursor: pointer;
     border: 1px dashed #ccc;
   }
+  #status { white-space: pre-wrap; text-align: left; max-width: 500px; margin: 20px auto; }
 </style>
 </head>
 <body>
   <div class="test-wrapper">
     <h2>Rive Button Test</h2>
     <p>You should see the LinkedIn button below:</p>
-    <canvas id="rive-linkedin" width="160" height="160" style="width:80px; height:80px;"></canvas>
-    <p id="status">Loading Rive...</p>
+    <canvas id="rive-linkedin" width="200" height="200" style="width:100px; height:100px;"></canvas>
+    <div id="status">Loading Rive...</div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js"></script>
   <script>
-    var status = document.getElementById('status');
-    var canvas = document.getElementById('rive-linkedin');
+    var el = document.getElementById('status');
 
-    try {
-      var linkedinButton = new rive.Rive({
-        src: 'Icons/button_potfolio_motionthis.riv',
-        canvas: canvas,
-        autoplay: true,
-        stateMachines: ['State Machine 1'],
-        fit: rive.Fit.Contain,
-        alignment: rive.Alignment.Center,
-        onLoad: function() {
-          linkedinButton.resizeDrawingSurfaceToCanvas();
-          status.textContent = 'Rive loaded! Hover and click the button.';
-          status.style.color = 'green';
-        },
-        onLoadError: function(e) {
-          status.textContent = 'Error loading .riv file: ' + e;
-          status.style.color = 'red';
-        }
-      });
-
-      canvas.addEventListener('click', function() {
-        status.textContent = 'Click detected! Would open LinkedIn.';
-      });
-    } catch(e) {
-      status.textContent = 'Script error: ' + e.message;
-      status.style.color = 'red';
+    function log(msg) {
+      el.textContent += '\n' + msg;
+      console.log(msg);
     }
+
+    log('Rive runtime version: ' + (rive.RuntimeLoader ? 'loaded' : 'unknown'));
+
+    var r = new rive.Rive({
+      src: 'Icons/button_potfolio_motionthis.riv',
+      canvas: document.getElementById('rive-linkedin'),
+      autoplay: true,
+      fit: rive.Fit.Contain,
+      alignment: rive.Alignment.Center,
+      onLoad: function() {
+        r.resizeDrawingSurfaceToCanvas();
+        log('SUCCESS - Rive file loaded');
+
+        var contents = r.contents;
+        if (contents) {
+          log('Artboards: ' + JSON.stringify(contents.artboards));
+        }
+
+        var names = r.stateMachineNames;
+        log('State machines found: ' + JSON.stringify(names));
+
+        var anims = r.animationNames;
+        log('Animations found: ' + JSON.stringify(anims));
+
+        // Try starting state machine by name
+        if (names && names.length > 0) {
+          r.play(names[0]);
+          log('Playing state machine: ' + names[0]);
+        }
+
+        el.style.color = 'green';
+      },
+      onStateChange: function(event) {
+        log('State changed: ' + JSON.stringify(event.data));
+      }
+    });
   </script>
 </body>
 </html>
