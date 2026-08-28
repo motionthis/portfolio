@@ -78,21 +78,27 @@
       onStateChange: function(e) { log('[Known] State: ' + JSON.stringify(e.data)); }
     });
 
-    // ── Your LinkedIn button ──
+    // ── Your LinkedIn button (autoBind for Data Binding) ──
     var canvasA = document.getElementById('rive-a');
     var btnA = new rive.Rive({
       src: 'Icons/button_potfolio_motionthis.riv',
       canvas: canvasA,
       autoplay: true,
+      autoBind: true,
       stateMachine: 'State Machine 1',
       fit: rive.Fit.Contain,
       alignment: rive.Alignment.Center,
       onLoad: function() {
         setTimeout(function() {
           btnA.resizeDrawingSurfaceToCanvas();
-          var contents = btnA.contents;
-          if (contents) log('[Yours-A] Artboards: ' + JSON.stringify(contents.artboards));
-          log('[Yours-A] Loaded OK');
+          log('[Yours-A] Loaded with autoBind');
+          var vmi = btnA.viewModelInstance;
+          if (vmi) {
+            log('[Yours-A] ViewModel: ' + vmi.viewModelName);
+            log('[Yours-A] Properties: ' + JSON.stringify(vmi.properties));
+          } else {
+            log('[Yours-A] No ViewModel instance bound!');
+          }
         }, 100);
       },
       onStateChange: function(e) { log('[Yours-A] State: ' + JSON.stringify(e.data)); }
@@ -104,15 +110,21 @@
       src: 'Icons/test-button-intracrive.riv',
       canvas: canvasB,
       autoplay: true,
+      autoBind: true,
       stateMachine: 'State Machine 1',
       fit: rive.Fit.Contain,
       alignment: rive.Alignment.Center,
       onLoad: function() {
         setTimeout(function() {
           btnB.resizeDrawingSurfaceToCanvas();
-          var contents = btnB.contents;
-          if (contents) log('[Yours-B] Artboards: ' + JSON.stringify(contents.artboards));
-          log('[Yours-B] Loaded OK');
+          log('[Yours-B] Loaded with autoBind');
+          var vmi = btnB.viewModelInstance;
+          if (vmi) {
+            log('[Yours-B] ViewModel: ' + vmi.viewModelName);
+            log('[Yours-B] Properties: ' + JSON.stringify(vmi.properties));
+          } else {
+            log('[Yours-B] No ViewModel instance bound!');
+          }
         }, 100);
       },
       onStateChange: function(e) { log('[Yours-B] State: ' + JSON.stringify(e.data)); }
