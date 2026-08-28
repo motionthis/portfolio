@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erfan Azadehnia</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:   #EDECEC;
+  --card: #D5D4CF;
+  --navy: #000B28;
+  --subtitle: rgba(40, 0, 1, 0.70);
+  --r:    26px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur:  1s;
+}
+html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
+
+#app {
+  font-family:-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  background:var(--bg);
+  width:100%; height:100vh;
+  overflow:hidden; position:relative;
+}
+
+/* ── IDENTITY PANEL ── */
+#identity {
+  position:absolute; top:0; left:0; bottom:0;
+  width:420px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:18px;
+  padding:0 28px;
+  z-index:2;
+  transform:translateX(calc(50vw - 210px));
+  transition:transform var(--dur) var(--ease),
+             top var(--dur) var(--ease),
+             bottom var(--dur) var(--ease);
+}
+#identity.sidebar {
+  transform:translateX(var(--sidebar-x, 149px));
+  align-items:flex-start;
+}
+
+/* Avatar */
+#av {
+  width:258px; height:317px; border-radius:37px;
+  background:#B56035;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--navy);
+  flex-shrink:0; overflow:hidden;
+  transition:width var(--dur) var(--ease),
+             height var(--dur) var(--ease),
+             border-radius var(--dur) var(--ease);
+}
+#identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
+
+#av img {
+  width:100%; height:100%;
+  object-fit:cover; display:block;
+}
+#av span {
+  font-size:72px; font-weight:800;
+  color:rgba(255,255,255,0.7); letter-spacing:-3px;
+  transition:font-size var(--dur) var(--ease);
+}
+#identity.sidebar #av span { font-size:36px; }
+
+/* Text group */
+#text-group {
+  display:flex; flex-direction:column; gap:0;
+  align-items:center;
+}
+#identity.sidebar #text-group { align-items:flex-start; }
+
+#iname {
+  font-size:48px; font-weight:860; color:var(--navy);
+  text-align:center; line-height:1.05;
+  white-space:nowrap;
+  transition:font-size var(--dur) var(--ease);
+}
+#identity.sidebar #iname { font-size:48px; text-align:left; }
+
+#ititle {
+  font-size:48px; font-weight:860; color:var(--subtitle);
+  text-align:center; line-height:1.1; white-space:nowrap;
+  transition:font-size var(--dur) var(--ease);
+}
+#identity.sidebar #ititle { font-size:32px; text-align:left; }
+
+/* Icons row */
+#iicons {
+  display:flex; gap:22px; align-items:center;
+  justify-content:center;
+}
+#identity.sidebar #iicons { justify-content:flex-start; }
+
+/* Works label */
+#works-label {
+  font-size:32px; font-weight:860; color:var(--navy); letter-spacing:-0.2px;
+  background:white; padding:0 5px;
+  max-height:0; overflow:hidden; opacity:0;
+  transition:max-height var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+#identity.sidebar #works-label { max-height:50px; opacity:1; }
+
+/* Icon buttons */
+.ib {
+  width:34px; height:34px; border-radius:8px;
+  border:1.5px solid rgba(0,11,40,0.18);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; text-decoration:none; flex-shrink:0;
+  transition:background 0.2s var(--ease);
+  opacity:0; transform:translateX(-14px);
+  animation:iconIn var(--dur) var(--ease) forwards;
+}
+.ib:hover { background:rgba(0,11,40,0.07); }
+.ib svg { display:block; }
+
+.ib:nth-child(1) { animation-delay:0.00s; }
+.ib:nth-child(2) { animation-delay:0.05s; }
+.ib:nth-child(3) { animation-delay:0.10s; }
+.ib:nth-child(4) { animation-delay:0.15s; }
+
+@keyframes iconIn {
+  to { opacity:1; transform:translateX(0); }
+}
+
+/* ── GRID / GALLERY ── */
+#grid {
+  position:absolute; top:0; bottom:0;
+  left:var(--grid-left, 680px); right:0;
+  overflow-y:auto; overflow-x:hidden;
+  display:flex; flex-direction:column; align-items:center;
+  padding-bottom:0;
+  transform:translateX(100%);
+  transition:transform var(--dur) var(--ease);
+}
+#grid.show { transform:translateX(0); }
+
+#grid::-webkit-scrollbar { width:5px; }
+#grid::-webkit-scrollbar-track { background:transparent; }
+#grid::-webkit-scrollbar-thumb { background:rgba(0,11,40,0.12); border-radius:3px; }
+
+/* Masonry container — exact Figma coordinates */
+#masonry {
+  position:relative;
+  width:855px;
+  height:4343px;
+  padding-bottom:40px;
+  margin:20px 0 0;
+  flex-shrink:0;
+}
+
+/* Cards — outline = outside stroke (not border) per Figma */
+.c {
+  position:absolute;
+  background:var(--card);
+  border-radius:var(--r);
+  outline:2px white solid;
+  overflow:hidden;
+  cursor:pointer;
+  opacity:0;
+  transition:opacity 0.8s var(--ease);
+}
+.c[data-outline="soft"] { outline:2px rgba(255, 255, 255, 0.90) solid; }
+.c:hover { filter:brightness(0.96); }
+.c.show { opacity:1; }
+
+.c video, .c img.card-img {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  pointer-events:none;
+  border-radius:var(--r);
+}
+
+/* ── Password Input (inline, below icons) ── */
+#pw-box {
+  position:relative;
+  width:241px; height:49px;
+  max-height:0; opacity:0; overflow:hidden;
+  transition:max-height 0.5s var(--ease), opacity 0.4s var(--ease);
+}
+#pw-box.visible { max-height:60px; opacity:1; overflow:visible; }
+
+#pw-input {
+  width:241px; height:41px;
+  margin-top:4px;
+  padding:0 52px 0 14px;
+  font-size:32px; font-weight:100; font-family:'SF Pro', -apple-system, sans-serif;
+  color:rgba(0,0,0,0.85); background:white;
+  border:1px solid #B2B4BB;
+  border-radius:10px; outline:none;
+  transition:border-color 0.2s var(--ease);
+}
+#pw-input:focus { border-color:var(--navy); }
+#pw-input::placeholder { color:rgba(0,0,0,0.6); font-weight:100; }
+
+@keyframes shake {
+  0%,100% { transform:translateX(0); }
+  20%,60% { transform:translateX(-6px); }
+  40%,80% { transform:translateX(6px); }
+}
+#pw-box.shake { animation:shake 0.4s var(--ease); }
+
+#pw-btn {
+  position:absolute; right:0; top:0;
+  width:47px; height:49px;
+  display:flex; align-items:center; justify-content:center;
+  background:none; border:none;
+  cursor:pointer;
+  transition:opacity 0.2s var(--ease);
+}
+#pw-btn:hover { opacity:0.6; }
+#pw-btn svg { display:block; }
+
+/* ── DEMO REEL ── */
+#demo-reel {
+  width:854px;
+  display:flex; flex-direction:column;
+  align-items:center;
+  gap:39px;
+  margin:60px auto 0;
+  padding-bottom:calc(100vh - 620px);
+  flex-shrink:0;
+  opacity:0;
+  transition:opacity 0.8s var(--ease);
+}
+#demo-reel.show { opacity:1; }
+
+.dr-text {
+  display:flex; flex-direction:column;
+  align-items:center;
+}
+.dr-title {
+  font-size:48px; font-weight:860;
+  color:var(--navy); text-align:center;
+}
+.dr-sub {
+  font-size:32px; font-weight:400;
+  color:rgba(40, 0, 1, 0.70); text-align:center;
+  width:816px;
+}
+.dr-video {
+  border-radius:var(--r);
+  outline:2px white solid;
+  overflow:hidden;
+  background:var(--card);
+}
+
+/* ── TABLET / iPad + iPhone (profile on top, masonry grid below, scaled to fit) ── */
+@media (max-width:1200px) {
+  html, body { overflow:auto; height:auto; }
+  #app { overflow:auto; height:auto; position:static; }
+
+  #identity {
+    position:static;
+    width:100%;
+    transform:none !important;
+    padding:52px 8px 0;
+    align-items:center;
+    justify-content:center;
+  }
+  #identity.sidebar {
+    transform:none !important;
+    align-items:center;
+  }
+  #identity.sidebar #text-group { align-items:center; }
+  #identity.sidebar #iicons { justify-content:center; }
+  #identity.sidebar #iname { text-align:center; }
+  #identity.sidebar #ititle { text-align:center; }
+
+  #av { width:173px; height:207px; border-radius:37px; }
+  #identity.sidebar #av { width:173px; height:207px; border-radius:37px; }
+  #iname { font-size:40px; }
+  #identity.sidebar #iname { font-size:40px; }
+  #ititle { font-size:24px; white-space:normal; }
+  #identity.sidebar #ititle { font-size:24px; }
+  #works-label { font-size:24px; }
+  #pw-box { width:200px; }
+  #pw-input { width:200px; font-size:24px; }
+
+  #grid {
+    position:static;
+    left:auto; right:auto; top:auto; bottom:auto;
+    transform:none !important;
+    overflow:visible;
+    padding:0 8px;
+    margin-top:30px;
+    display:none;
+  }
+  #grid.show { transform:none !important; display:flex; }
+
+  /* Masonry keeps absolute layout — zoom scales it to fit */
+  #masonry { margin:0 auto; }
+
+  .c[data-card="layout-small"] { display:none !important; }
+
+  /* iPhone-specific — more bottom gap + clip Vimeo video corners */
+  @media (max-width:768px) {
+    #demo-reel { padding-bottom:140px !important; }
+    .dr-video {
+      overflow:hidden;
+      -webkit-mask-image:-webkit-radial-gradient(white, black); /* fixes iOS Safari corner clipping */
+    }
+    .dr-video iframe {
+      border-radius:var(--r) !important;
+    }
+  }
+
+  #rigs-section { width:100%; margin:40px auto 0; }
+  .rigs-label { font-size:20px; width:100%; }
+  .rigs-grid { width:100%; }
+  .rigs-grid .c { width:100% !important; height:auto !important; aspect-ratio:402/379; }
+
+  #demo-reel { margin:60px auto 0; padding-bottom:140px; }
+  .dr-title { font-size:32px; }
+  .dr-sub { font-size:20px; width:100%; }
+  .dr-video { width:100% !important; }
+  .dr-video iframe { width:100% !important; height:auto !important; aspect-ratio:16/9; }
+
+  .c { opacity:0; transition:opacity 0.6s var(--ease); }
+  .c.show { opacity:1; }
+}
+
+/* ── TEMPLATE & RIGS SECTION ── */
+#rigs-section {
+  width:854px;
+  display:flex; flex-direction:column;
+  align-items:flex-start;
+  gap:39px;
+  margin:60px auto 0;
+  flex-shrink:0;
+  opacity:0;
+  transition:opacity 0.8s var(--ease);
+}
+#rigs-section.show { opacity:1; }
+
+.rigs-label {
+  font-size:32px; font-weight:400;
+  color:rgba(40, 0, 1, 0.70);
+  text-align:left;
+  font-family:-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+.rigs-grid {
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:30px;
+}
+.rigs-grid .c {
+  position:relative;
+  width:402px; height:379px;
+  opacity:0;
+  transition:opacity 0.8s var(--ease);
+}
+.rigs-grid .c.show { opacity:1; }
+
+/* ── VIDEO LIGHTBOX (tablet/phone only) ── */
+#video-modal {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.92);
+  z-index:1000;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:60px 12px 20px;
+}
+#video-modal.show { display:flex; }
+
+#video-modal video {
+  width:100%;
+  max-height:calc(100vh - 90px);
+  object-fit:contain;
+  border-radius:16px;
+  background:#000;
+}
+
+#video-modal-close {
+  position:absolute;
+  top:16px; right:16px;
+  width:44px; height:44px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(10px);
+  border:none;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color:#fff;
+  font-size:24px;
+  line-height:1;
+  z-index:1001;
+  transition:background 0.2s var(--ease);
+}
+#video-modal-close:hover,
+#video-modal-close:active { background:rgba(255,255,255,0.28); }
+
+/* Visual cue — cards on tablet/phone feel tappable */
+@media (max-width:1024px) {
+  .c { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  .c:active { opacity:0.85; transition:opacity 0.1s; }
+}
+
+#ease-tag {
+  position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+  font-size:10.5px; color:rgba(0,11,40,0.28);
+  font-family:ui-monospace,'SF Mono',monospace;
+  white-space:nowrap; pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<!-- ── VIDEO LIGHTBOX (tablet/phone) ── -->
+<div id="video-modal" role="dialog" aria-modal="true">
+  <button id="video-modal-close" aria-label="Close video">✕</button>
+  <video id="video-modal-player" controls playsinline autoplay loop></video>
+</div>
+
+<div id="app">
+
+  <!-- ── IDENTITY ── -->
+  <div id="identity">
+
+    <div id="av">
+      <img src="Assets/portrait.jpeg" alt="Erfan Azadehnia"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <span style="display:none;">EA</span>
+    </div>
+
+    <div id="text-group">
+      <div id="iname">Erfan Azadehnia</div>
+      <div id="ititle">Sr. Motion Graphic designer</div>
+    </div>
+
+    <div id="iicons">
+      <!-- LinkedIn (Rive) -->
+      <div id="btn-li" title="LinkedIn" style="width:38px; height:38px; cursor:pointer; flex-shrink:0;">
+        <canvas id="rive-linkedin" width="76" height="76" style="width:38px; height:38px; display:block;"></canvas>
+      </div>
+      <!-- Email -->
+      <a class="ib" id="btn-em" href="#" title="MotionThis@gmail.com">
+        <svg width="20" height="16" viewBox="0 0 33 26" fill="none">
+          <path d="M0 3.25C0 1.455 1.478 0 3.3 0h26.4C31.522 0 33 1.455 33 3.25v19.5C33 24.545 31.522 26 29.7 26H3.3C1.478 26 0 24.545 0 22.75V3.25Zm5.806 0L16.5 12.465 27.194 3.25H5.806ZM29.7 5.41 17.587 15.849a1.65 1.65 0 0 1-2.174 0L3.3 5.41V22.75h26.4V5.41Z" fill="#000B28"/>
+        </svg>
+      </a>
+      <!-- CV -->
+      <a class="ib" href="https://docs.google.com/document/d/1SpKWIvnQavojIAsakxFNdJD96WLiQep2rMVmg11NFPs/export?format=pdf" target="_blank" title="Resume">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <path d="M11.7 9.525a1.515 1.515 0 1 0 0-3.03 1.515 1.515 0 0 0 0 3.03Z" fill="#000B28"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7 10.035c-1.68 0-3.045 1.17-3.045 2.79v.765c0 .27.12.51.33.51h5.07c.21 0 .33-.24.33-.51v-.765c0-1.62-1.365-2.79-3.045-2.79ZM8.625 17.25c0-.65.525-1.125 1.125-1.125h10.5c.6 0 1.125.475 1.125 1.125 0 .649-.525 1.125-1.125 1.125H9.75c-.6 0-1.125-.476-1.125-1.125Zm0 4.5c0-.65.525-1.125 1.125-1.125h10.5c.6 0 1.125.475 1.125 1.125 0 .649-.525 1.125-1.125 1.125H9.75c-.6 0-1.125-.476-1.125-1.125Z" fill="#000B28"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 3.75A3 3 0 0 1 6.75.75h10.035a3 3 0 0 1 2.198.947l6.477 7.063c.538.575.79 1.326.79 2.04V26.25a3 3 0 0 1-3 3H6.75a3 3 0 0 1-3-3V3.75Zm13.034 0H6.75V26.25h16.5V10.788L16.784 3.75Z" fill="#000B28"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M16.785.75A1.5 1.5 0 0 1 18.285 2.25V9.3H24.75a1.5 1.5 0 0 1 0 3H16.785a1.5 1.5 0 0 1-1.5-1.5V2.25A1.5 1.5 0 0 1 16.785.75Z" fill="#000B28"/>
+        </svg>
+      </a>
+      <!-- Works toggle -->
+      <div class="ib" onclick="toggle()" title="Portfolio">
+        <svg width="17" height="17" viewBox="0 0 27 26" fill="none">
+          <path opacity="0.2" d="M13 .987C6.373.987 1 6.36 1 12.988S6.373 24.988 13 24.988s12-5.373 12-12S19.627.987 13 .987Z" fill="#000B28"/>
+          <path d="M26 23.988h-6.08A12.956 12.956 0 0 0 26 12.988C26 6.36 20.627.987 14 .987S2 6.36 2 12.988s5.373 12 12 12h12a1 1 0 0 0 0-2ZM2 12.988A11 11 0 1 1 24 12.988 11 11 0 0 1 2 12.988Z" fill="#000B28"/>
+          <circle cx="7" cy="13" r="2" fill="#000B28"/>
+          <circle cx="13" cy="7" r="2" fill="#000B28"/>
+          <circle cx="19" cy="13" r="2" fill="#000B28"/>
+          <circle cx="13" cy="19" r="2" fill="#000B28"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="works-label">Works</div>
+
+    <!-- Password input — inline below icons -->
+    <div id="pw-box">
+      <input id="pw-input" type="password" placeholder="Password" autocomplete="off">
+      <button id="pw-btn">
+        <svg width="29" height="27" viewBox="0 0 29 27" fill="none">
+          <path d="M2 13.5h25m0 0l-11-11m11 11l-11 11" stroke="#000" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── IMAGE GALLERY ── -->
+  <div id="grid">
+    <div id="masonry">
+
+      <!-- 1. Hero-DynamicIsland_3000 — full width top -->
+      <div class="c" data-card="hero" style="left:0; top:0; width:854px; height:438px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/Hero-DynamicIsland_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 2. DynamicIsland_GEOs — left wide -->
+      <div class="c" data-card="dynamicisland" style="left:0; top:468px; width:394px; height:435px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/DynamicIsland_GEOs.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 3. GlassNotifcation_3000 — middle portrait -->
+      <div class="c" data-card="glass" style="left:424px; top:468px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/GlassNotifcation_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 4. LayOut — right small (desktop only) -->
+      <div class="c" data-card="layout-small" style="left:654px; top:468px; width:200px; height:200px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/LayOut.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 5. Camera_4000 — right tall -->
+      <div class="c" data-card="camera" style="left:654px; top:703px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/Camera_4000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 6. Spotlight_3000 — left wide -->
+      <div class="c" data-card="spotlight" style="left:0; top:933px; width:394px; height:255px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/Spotlight_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 7. Selected — middle -->
+      <div class="c" data-card="selected" style="left:423px; top:934px; width:200px; height:433px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/Selected.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 8. create-sticker_2000 — right -->
+      <div class="c" data-card="create-sticker" style="left:653px; top:1164px; width:200px; height:433px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/create-sticker_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 9. interest_2000 — left tall -->
+      <div class="c" data-card="interest" style="left:1px; top:1218px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/interest_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 10. apps_arcade_3000 — mid-left -->
+      <div class="c" data-card="apps-arcade" data-outline="soft" style="left:227px; top:1218px; width:167px; height:297px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/apps_arcade_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 11. LogoAppleHealthness_2000 — small square -->
+      <div class="c" data-card="healthness" style="left:424px; top:1396px; width:200px; height:201px; border-radius:11px;">
+        <video autoplay muted loop playsinline style="border-radius:11px;">
+          <source src="Assets/LogoAppleHealthness_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 12. iPhoneHero_3000 — wide -->
+      <div class="c" data-card="iphonehero" style="left:228px; top:1631px; width:626px; height:487px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/iPhoneHero.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 13. WallPaper_3000 — left tall -->
+      <div class="c" data-card="wallpaper" style="left:1px; top:1683px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/WallPaper_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 14. Image Card (Neo) — left tall -->
+      <div class="c" data-card="neo" style="left:1px; top:2148px; width:393px; height:529px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/Neo_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 15. stage-manager — right -->
+      <div class="c" data-card="stage-manager" data-outline="soft" style="left:424px; top:2148px; width:431px; height:297px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/stage-manager.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 16. Mirroring_3000 — right -->
+      <div class="c" data-card="mirroring" style="left:424px; top:2475px; width:430px; height:278px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/Mirroring_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 17. SliderOver — large left -->
+      <div class="c" data-card="sliderover" style="left:-4px; top:2783px; width:578px; height:433px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/SliderOver.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 18. WritingTools_2000 — right -->
+      <div class="c" data-card="writingtools" style="left:654px; top:2783px; width:200px; height:435px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/WritingTools_2000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 19. IpadSpringboard — left -->
+      <div class="c" data-card="ipadspringboard" style="left:1px; top:3248px; width:393px; height:295px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/IpadSpringboard.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 20. Camera-beach — right -->
+      <div class="c" data-card="camera-beach" style="left:424px; top:3248px; width:430px; height:297px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/Camera-beach.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 21. MacHero — left -->
+      <div class="c" data-card="machero" style="left:1px; top:3573px; width:392px; height:433px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/MacHero.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 22. Wallet-cards_3000 — middle small -->
+      <div class="c" data-card="wallet" style="left:417px; top:3577px; width:207px; height:221px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/Wallet-cards_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 23. control_center_4000 — right tall -->
+      <div class="c" data-card="control-center" style="left:654px; top:3573px; width:200px; height:433px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/control_center_4000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 24. iMacHero_3000 — full width bottom -->
+      <div class="c" data-card="imachero" style="left:1px; top:4040px; width:853px; height:282px;">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="Assets/iMacHero_3000.mp4" type="video/mp4">
+        </video>
+      </div>
+
+    </div>
+
+    <!-- ── TEMPLATE & RIGS SECTION ── -->
+    <div id="rigs-section">
+      <div class="rigs-label">——— Template and Rigs</div>
+      <div class="rigs-grid">
+        <div class="c" data-card="arrow-rig" style="width:402px; height:379px;">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="Assets/Arrow-Rig.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="c" data-card="shape-rig" style="width:402px; height:379px;">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="Assets/Shape.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="c" data-card="focus-rig" style="width:402px; height:379px;">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="Assets/FocusSquare_rig.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="c" data-card="loupe-rig" style="width:402px; height:379px;">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="Assets/Loupe.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DEMO REEL SECTION ── -->
+    <div id="demo-reel">
+      <div class="dr-text">
+        <div class="dr-title">Demo Reel</div>
+        <div class="dr-sub">Freelance Commercial Video Production (Before 2017)</div>
+      </div>
+      <div class="dr-video">
+        <iframe width="854" height="480" src="https://www.youtube.com/embed/IWR1675cd_0"
+                style="display:block; max-width:100%; border:none;"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Demo Reel"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  /* ── Email ── */
+  var u = 'motionthis';
+  var d = 'gmail.com';
+  document.getElementById('btn-em').href = 'mai' + 'lto:' + u + '@' + d;
+
+  /* ── Elements ── */
+  var identity = document.getElementById('identity');
+  var grid     = document.getElementById('grid');
+  var cards    = document.querySelectorAll('#masonry > .c');
+  var masonry  = document.getElementById('masonry');
+  var demoReel = document.getElementById('demo-reel');
+  var rigsCards = document.querySelectorAll('#rigs-section .c');
+  var open     = false;
+
+  /* ── Sort cards by top position for sequential animation ── */
+  var sortedCards = Array.from(cards).sort(function (a, b) {
+    return parseFloat(a.style.top) - parseFloat(b.style.top);
+  });
+
+  /* ── Password input elements ── */
+  var pwBox    = document.getElementById('pw-box');
+  var pwInput  = document.getElementById('pw-input');
+  var pwBtn    = document.getElementById('pw-btn');
+  var authenticated = false;
+
+  function showPassword() {
+    pwInput.value = '';
+    pwBox.classList.remove('shake');
+    pwBox.classList.add('visible');
+    setTimeout(function () { pwInput.focus(); }, 400);
+  }
+
+  function hidePassword() {
+    pwBox.classList.remove('visible');
+  }
+
+  function submitPassword() {
+    if (pwInput.value === 'Erfan') {
+      authenticated = true;
+      hidePassword();
+      openWorks();
+    } else {
+      pwInput.value = '';
+      pwBox.classList.remove('shake');
+      void pwBox.offsetWidth;
+      pwBox.classList.add('shake');
+      pwInput.focus();
+    }
+  }
+
+  pwBtn.addEventListener('click', submitPassword);
+  pwInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') submitPassword();
+  });
+
+  /* ── Gallery fit — smart positioning + zoom ── */
+  var iname = document.getElementById('iname');
+  var ititle = document.getElementById('ititle');
+  var rigsSection = document.getElementById('rigs-section');
+
+  function resetText() {
+    iname.style.fontSize = '';
+    ititle.style.fontSize = '';
+  }
+
+  function shrinkText(scale) {
+    var t = Math.max(0.65, scale);
+    iname.style.fontSize = Math.round(48 * t) + 'px';
+    ititle.style.fontSize = Math.round(32 * t) + 'px';
+  }
+
+  function fitGallery() {
+    var vw = window.innerWidth;
+    var root = document.documentElement;
+    var idW = 420;   /* identity panel width */
+    var galW = 855;  /* masonry width */
+    var idealX = 149; /* ideal sidebar translateX */
+    var idealGap = 111; /* ideal gap: 680 - (149+420) */
+    var minGap = 30;  /* 30px min gap between profile & works */
+    var minLeft = 8;  /* minimum left margin for profile */
+    /* Right margin: 12px for 13" laptops, 30px for larger desktops */
+    var rightMargin = vw >= 1440 ? 30 : 12;
+
+    if (vw > 1200) {
+      /* ── Desktop — sidebar + gallery ── */
+
+      /* Step 1: Can everything fit at ideal positions? */
+      if (idealX + idW + idealGap + galW + rightMargin <= vw) {
+        root.style.setProperty('--sidebar-x', idealX + 'px');
+        root.style.setProperty('--grid-left', (idealX + idW + idealGap) + 'px');
+        grid.style.right = rightMargin + 'px';
+        masonry.style.zoom = '';
+        demoReel.style.zoom = '';
+        if (rigsSection) rigsSection.style.zoom = '';
+        resetText();
+        return;
+      }
+
+      /* Step 2: Push profile left, keep ideal gap */
+      var xForIdealGap = vw - idW - idealGap - galW - rightMargin;
+      if (xForIdealGap >= minLeft) {
+        root.style.setProperty('--sidebar-x', xForIdealGap + 'px');
+        root.style.setProperty('--grid-left', (xForIdealGap + idW + idealGap) + 'px');
+        grid.style.right = rightMargin + 'px';
+        masonry.style.zoom = '';
+        demoReel.style.zoom = '';
+        if (rigsSection) rigsSection.style.zoom = '';
+        resetText();
+        return;
+      }
+
+      /* Step 3: Profile at far left, shrink gap down to 30px min */
+      var rightEdge = minLeft + idW; /* 428 */
+      var spaceLeft = vw - rightEdge - rightMargin;
+      if (spaceLeft >= minGap + galW) {
+        root.style.setProperty('--sidebar-x', minLeft + 'px');
+        root.style.setProperty('--grid-left', (rightEdge + minGap) + 'px');
+        grid.style.right = rightMargin + 'px';
+        masonry.style.zoom = '';
+        demoReel.style.zoom = '';
+        if (rigsSection) rigsSection.style.zoom = '';
+        resetText();
+        return;
+      }
+
+      /* Step 4: Profile at far left, 30px gap, zoom gallery to fit + shrink text */
+      var gridLeft = rightEdge + minGap;
+      var available = vw - gridLeft - rightMargin;
+      var scale = available / galW;
+      root.style.setProperty('--sidebar-x', minLeft + 'px');
+      root.style.setProperty('--grid-left', gridLeft + 'px');
+      grid.style.right = rightMargin + 'px';
+      masonry.style.zoom = scale;
+      demoReel.style.zoom = scale;
+      if (rigsSection) rigsSection.style.zoom = scale;
+
+      /* Shrink profile text when gallery is being squeezed */
+      if (scale < 1) {
+        shrinkText(scale);
+      } else {
+        resetText();
+      }
+
+    } else {
+      /* ── iPad + iPhone — profile on top, gallery below, zoom to fit ── */
+      grid.style.right = '';
+      root.style.removeProperty('--sidebar-x');
+      root.style.removeProperty('--grid-left');
+      /* More side-padding on small tablets/phones so the frame isn't clipped */
+      var sidePad = vw <= 820 ? 40 : 24;
+      var available = vw - sidePad;
+      var scale = Math.min(1, available / 855);
+      masonry.style.zoom = scale;
+      demoReel.style.zoom = scale;
+      if (rigsSection) rigsSection.style.zoom = scale;
+      resetText();
+    }
+  }
+
+  fitGallery();
+  window.addEventListener('resize', fitGallery);
+
+  /* ── Open / Close works ── */
+  function openWorks() {
+    open = true;
+    identity.classList.add('sidebar');
+    grid.classList.add('show');
+    fitGallery();
+
+    sortedCards.forEach(function (c, i) {
+      var delay = 300 + i * 80;
+      setTimeout(function () {
+        c.classList.add('show');
+        var v = c.querySelector('video');
+        if (v) v.play().catch(function(){});
+      }, delay);
+    });
+
+    /* Show Rigs section after masonry cards */
+    var rigsDelay = 300 + sortedCards.length * 80 + 200;
+    setTimeout(function () {
+      var rs = document.getElementById('rigs-section');
+      if (rs) rs.classList.add('show');
+      rigsCards.forEach(function (c, i) {
+        setTimeout(function () {
+          c.classList.add('show');
+          var v = c.querySelector('video');
+          if (v) v.play().catch(function(){});
+        }, i * 80);
+      });
+    }, rigsDelay);
+
+    /* Show Demo Reel after rigs */
+    var demoDelay = rigsDelay + rigsCards.length * 80 + 200;
+    setTimeout(function () {
+      demoReel.classList.add('show');
+    }, demoDelay);
+  }
+
+  function closeWorks() {
+    open = false;
+    hidePassword();
+    demoReel.classList.remove('show');
+    var rs = document.getElementById('rigs-section');
+    if (rs) rs.classList.remove('show');
+    rigsCards.forEach(function (c) { c.classList.remove('show'); });
+    var reversed = sortedCards.slice().reverse();
+    reversed.forEach(function (c, i) {
+      var delay = i * 50;
+      setTimeout(function () { c.classList.remove('show'); }, delay);
+    });
+
+    setTimeout(function () {
+      grid.classList.remove('show');
+      identity.classList.remove('sidebar');
+    }, cards.length * 50 + 200);
+  }
+
+  /* ── Tablet & Mobile: IntersectionObserver fade-in on scroll ── */
+  var isScrollLayout = window.matchMedia('(max-width:1200px)').matches;
+  if (isScrollLayout) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          var v = entry.target.querySelector('video');
+          if (v) v.play().catch(function(){});
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    cards.forEach(function (c) { observer.observe(c); });
+    rigsCards.forEach(function (c) { observer.observe(c); });
+
+    /* ── Video lightbox — tap a card to expand on tablet/phone ── */
+    var modal = document.getElementById('video-modal');
+    var modalPlayer = document.getElementById('video-modal-player');
+    var modalClose = document.getElementById('video-modal-close');
+
+    function openModal(src) {
+      modalPlayer.src = src;
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      modalPlayer.play().catch(function(){});
+    }
+    function closeModal() {
+      modalPlayer.pause();
+      modalPlayer.removeAttribute('src');
+      modalPlayer.load();
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function attachTap(card) {
+      card.addEventListener('click', function () {
+        var source = card.querySelector('video source');
+        if (source && source.src) openModal(source.src);
+      });
+    }
+    cards.forEach(attachTap);
+    rigsCards.forEach(attachTap);
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+    });
+
+    /* Override openWorks for scroll-based reveal on tablet & phone */
+    openWorks = function () {
+      open = true;
+      identity.classList.add('sidebar');
+      grid.classList.add('show');
+      var rs = document.getElementById('rigs-section');
+      if (rs) rs.classList.add('show');
+      demoReel.classList.add('show');
+      fitGallery();
+      /* Cards fade in via IntersectionObserver as user scrolls */
+    };
+  }
+
+  /* ── Toggle ── */
+  window.toggle = function () {
+    if (!open && !authenticated) {
+      showPassword();
+      return;
+    }
+    if (!open) {
+      openWorks();
+    } else {
+      closeWorks();
+    }
+  };
+}());
+
+/* ── Rive LinkedIn Button ── */
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js';
+  s.onload = function() {
+    var canvas = document.getElementById('rive-linkedin');
+    if (!canvas) return;
+    var linkedinButton = new rive.Rive({
+      src: 'Icons/button_potfolio_motionthis.riv',
+      canvas: canvas,
+      autoplay: true,
+      autoBind: true,
+      stateMachine: 'State Machine 1',
+      fit: rive.Fit.Contain,
+      alignment: rive.Alignment.Center,
+      onLoad: function() {
+        setTimeout(function() { linkedinButton.resizeDrawingSurfaceToCanvas(); }, 50);
+      }
+    });
+    canvas.addEventListener('click', function() {
+      window.open('https://www.linkedin.com/in/erfanazadehnia/', '_blank');
+    });
+  };
+  document.body.appendChild(s);
+}());
+</script>
+</body>
+</html>
