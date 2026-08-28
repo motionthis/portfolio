@@ -14,7 +14,7 @@
     background: #EDECEC;
     font-family: sans-serif;
   }
-  .test-wrapper { text-align: center; max-width: 700px; }
+  .test-wrapper { text-align: center; max-width: 800px; }
   .buttons {
     display: flex;
     gap: 40px;
@@ -24,22 +24,26 @@
   }
   .btn-test { text-align: center; }
   .btn-test label { display: block; margin-top: 8px; font-size: 13px; color: #666; }
-  canvas { cursor: pointer; border: 1px dashed #ccc; background: transparent; }
+  canvas { cursor: pointer; border: 1px dashed #ccc; }
   #status { white-space: pre-wrap; text-align: left; margin: 20px auto; font-size: 12px; font-family: monospace; background: #fff; padding: 15px; border-radius: 8px; max-height: 300px; overflow-y: auto; }
 </style>
 </head>
 <body>
   <div class="test-wrapper">
-    <h2>Rive Button A/B Test</h2>
+    <h2>Rive Button Test</h2>
     <p>Hover and click each button:</p>
     <div class="buttons">
       <div class="btn-test">
+        <canvas id="rive-known" width="300" height="150" style="width:150px; height:75px;"></canvas>
+        <label>Known working<br>(Twitter demo button)</label>
+      </div>
+      <div class="btn-test">
         <canvas id="rive-a" width="200" height="200" style="width:100px; height:100px;"></canvas>
-        <label>A: LinkedIn (yours)</label>
+        <label>Your LinkedIn button</label>
       </div>
       <div class="btn-test">
         <canvas id="rive-b" width="200" height="200" style="width:100px; height:100px;"></canvas>
-        <label>B: Interactive test</label>
+        <label>Your interactive test</label>
       </div>
     </div>
     <div id="status">Initializing...</div>
@@ -51,10 +55,30 @@
     function log(msg) {
       el.textContent += '\n' + msg;
       el.scrollTop = el.scrollHeight;
-      console.log(msg);
     }
 
-    // ── BUTTON A ──
+    // ── Known working: Twitter demo button from Rive tutorial ──
+    var canvasK = document.getElementById('rive-known');
+    var btnK = new rive.Rive({
+      src: 'Icons/tweeter_button-demo.riv',
+      canvas: canvasK,
+      autoplay: true,
+      artboard: 'Button',
+      stateMachine: 'State Machine 1',
+      fit: rive.Fit.Contain,
+      alignment: rive.Alignment.Center,
+      onLoad: function() {
+        setTimeout(function() {
+          btnK.resizeDrawingSurfaceToCanvas();
+          var contents = btnK.contents;
+          if (contents) log('[Known] Artboards: ' + JSON.stringify(contents.artboards));
+          log('[Known] Loaded OK');
+        }, 100);
+      },
+      onStateChange: function(e) { log('[Known] State: ' + JSON.stringify(e.data)); }
+    });
+
+    // ── Your LinkedIn button ──
     var canvasA = document.getElementById('rive-a');
     var btnA = new rive.Rive({
       src: 'Icons/button_potfolio_motionthis.riv',
@@ -66,42 +90,15 @@
       onLoad: function() {
         setTimeout(function() {
           btnA.resizeDrawingSurfaceToCanvas();
-          log('[A] Loaded. Anims: ' + JSON.stringify(btnA.animationNames));
-
-          // Try to manually setup listeners
-          if (typeof btnA.setupRiveListeners === 'function') {
-            btnA.setupRiveListeners();
-            log('[A] setupRiveListeners() called');
-          }
-
-          // Check inputs
-          var inputs = btnA.stateMachineInputs('State Machine 1');
-          log('[A] Inputs: ' + JSON.stringify(inputs ? inputs.map(function(i){ return {name:i.name, type:i.type}; }) : 'none'));
-
-          // Manual fallback: control animations via mouse events
-          canvasA.addEventListener('mouseenter', function() {
-            log('[A] mouseenter → play Anim');
-            btnA.play('Anim');
-          });
-          canvasA.addEventListener('mouseleave', function() {
-            log('[A] mouseleave → play Default');
-            btnA.play('Default ');
-          });
-          canvasA.addEventListener('mousedown', function() {
-            log('[A] mousedown → play Down');
-            btnA.play('Down');
-          });
-          canvasA.addEventListener('mouseup', function() {
-            log('[A] mouseup → play Anim');
-            btnA.play('Anim');
-          });
+          var contents = btnA.contents;
+          if (contents) log('[Yours-A] Artboards: ' + JSON.stringify(contents.artboards));
+          log('[Yours-A] Loaded OK');
         }, 100);
       },
-      onStateChange: function(e) { log('[A] State: ' + JSON.stringify(e.data)); }
+      onStateChange: function(e) { log('[Yours-A] State: ' + JSON.stringify(e.data)); }
     });
-    canvasA.addEventListener('click', function() { log('[A] Click!'); });
 
-    // ── BUTTON B ──
+    // ── Your interactive test button ──
     var canvasB = document.getElementById('rive-b');
     var btnB = new rive.Rive({
       src: 'Icons/test-button-intracrive.riv',
@@ -113,38 +110,15 @@
       onLoad: function() {
         setTimeout(function() {
           btnB.resizeDrawingSurfaceToCanvas();
-          log('[B] Loaded. Anims: ' + JSON.stringify(btnB.animationNames));
-
-          // Try to manually setup listeners
-          if (typeof btnB.setupRiveListeners === 'function') {
-            btnB.setupRiveListeners();
-            log('[B] setupRiveListeners() called');
-          }
-
-          // Check inputs
-          var inputs = btnB.stateMachineInputs('State Machine 1');
-          log('[B] Inputs: ' + JSON.stringify(inputs ? inputs.map(function(i){ return {name:i.name, type:i.type}; }) : 'none'));
-
-          // Manual fallback: control animations via mouse events
-          canvasB.addEventListener('mouseenter', function() {
-            log('[B] mouseenter → play Hover');
-            btnB.play('Hover');
-          });
-          canvasB.addEventListener('mouseleave', function() {
-            log('[B] mouseleave → play No Hover');
-            btnB.play('No Hover');
-          });
-          canvasB.addEventListener('mousedown', function() {
-            log('[B] mousedown → play Click');
-            btnB.play('Click');
-          });
+          var contents = btnB.contents;
+          if (contents) log('[Yours-B] Artboards: ' + JSON.stringify(contents.artboards));
+          log('[Yours-B] Loaded OK');
         }, 100);
       },
-      onStateChange: function(e) { log('[B] State: ' + JSON.stringify(e.data)); }
+      onStateChange: function(e) { log('[Yours-B] State: ' + JSON.stringify(e.data)); }
     });
-    canvasB.addEventListener('click', function() { log('[B] Click!'); });
 
-    el.textContent = 'Rive runtime loaded. Waiting for .riv files...';
+    el.textContent = 'Rive loaded. Waiting for files...';
   </script>
 </body>
 </html>
