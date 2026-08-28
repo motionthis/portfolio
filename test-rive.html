@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rive Button Test</title>
+<style>
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: #EDECEC;
+    font-family: sans-serif;
+  }
+  .test-wrapper {
+    text-align: center;
+  }
+  canvas {
+    cursor: pointer;
+    border: 1px dashed #ccc;
+  }
+</style>
+</head>
+<body>
+  <div class="test-wrapper">
+    <h2>Rive Button Test</h2>
+    <p>You should see the LinkedIn button below:</p>
+    <canvas id="rive-linkedin" width="160" height="160" style="width:80px; height:80px;"></canvas>
+    <p id="status">Loading Rive...</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js"></script>
+  <script>
+    var status = document.getElementById('status');
+    var canvas = document.getElementById('rive-linkedin');
+
+    try {
+      var linkedinButton = new rive.Rive({
+        src: 'Assets/button_potfolio_motionthis.riv',
+        canvas: canvas,
+        autoplay: true,
+        stateMachines: ['State Machine 1'],
+        fit: rive.Fit.Contain,
+        alignment: rive.Alignment.Center,
+        onLoad: function() {
+          linkedinButton.resizeDrawingSurfaceToCanvas();
+          status.textContent = 'Rive loaded! Hover and click the button.';
+          status.style.color = 'green';
+        },
+        onLoadError: function(e) {
+          status.textContent = 'Error loading .riv file: ' + e;
+          status.style.color = 'red';
+        }
+      });
+
+      canvas.addEventListener('click', function() {
+        status.textContent = 'Click detected! Would open LinkedIn.';
+      });
+    } catch(e) {
+      status.textContent = 'Script error: ' + e.message;
+      status.style.color = 'red';
+    }
+  </script>
+</body>
+</html>
