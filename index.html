@@ -438,10 +438,12 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     </div>
 
     <div id="iicons">
-      <!-- LinkedIn (Rive) -->
-      <div id="btn-li" title="LinkedIn" style="width:38px; height:38px; cursor:pointer; pointer-events:none;">
-        <canvas id="rive-linkedin" width="76" height="76" style="width:38px; height:38px; pointer-events:auto;"></canvas>
-      </div>
+      <!-- LinkedIn -->
+      <a class="ib" id="btn-li" href="https://www.linkedin.com/in/erfanazadehnia/" target="_blank" title="LinkedIn">
+        <svg width="20" height="20" viewBox="0 0 35 36" fill="none">
+          <path d="M27.708 4.375a3.333 3.333 0 0 1 2.917 2.917v20.416a3.333 3.333 0 0 1-2.917 2.917H7.292a3.333 3.333 0 0 1-2.917-2.917V7.292a3.333 3.333 0 0 1 2.917-2.917h20.416Zm-.729 22.604V19.25a4.558 4.558 0 0 0-4.558-4.754c-1.24 0-2.683.758-3.383 1.896v-1.62h-4.07v12.208h4.07v-7.19a2.083 2.083 0 1 1 4.166 0v7.19h3.775ZM10.033 12.483a2.458 2.458 0 1 0 0-4.914 2.458 2.458 0 0 0 0 4.914Zm2.028 14.496V14.773H8.02v12.206h4.04Z" fill="#000B28"/>
+        </svg>
+      </a>
       <!-- Email -->
       <a class="ib" id="btn-em" href="#" title="MotionThis@gmail.com">
         <svg width="20" height="16" viewBox="0 0 33 26" fill="none">
@@ -1006,30 +1008,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   };
 }());
 
-/* ── Rive LinkedIn Button ── */
-(function() {
-  var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js';
-  s.onload = function() {
-    var canvas = document.getElementById('rive-linkedin');
-    if (!canvas) return;
-    var linkedinButton = new rive.Rive({
-      src: 'Icons/button_potfolio_motionthis.riv',
-      canvas: canvas,
-      autoplay: true,
-      stateMachine: 'State Machine 1',
-      fit: rive.Fit.Contain,
-      alignment: rive.Alignment.Center,
-      onLoad: function() {
-        setTimeout(function() { linkedinButton.resizeDrawingSurfaceToCanvas(); }, 50);
-      }
-    });
-    canvas.addEventListener('click', function() {
-      window.open('https://www.linkedin.com/in/erfanazadehnia/', '_blank');
-    });
-  };
-  document.body.appendChild(s);
-}());
+/* ── Rive LinkedIn Button (disabled — testing on test-rive.html) ── */
 </script>
 </body>
 </html>
