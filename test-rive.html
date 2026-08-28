@@ -15,47 +15,103 @@
     font-family: sans-serif;
   }
   .test-wrapper { text-align: center; }
-  canvas { cursor: pointer; border: 1px dashed #ccc; }
-  #status { white-space: pre-wrap; text-align: left; max-width: 500px; margin: 20px auto; font-size: 14px; }
+  .buttons {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+  }
+  .btn-test {
+    text-align: center;
+  }
+  .btn-test label {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #666;
+  }
+  canvas {
+    cursor: pointer;
+    border: 1px dashed #ccc;
+  }
+  #status { white-space: pre-wrap; text-align: left; max-width: 600px; margin: 20px auto; font-size: 13px; }
 </style>
 </head>
 <body>
   <div class="test-wrapper">
-    <h2>Rive Button Test</h2>
-    <p>You should see the LinkedIn button below:</p>
-    <canvas id="rive-linkedin" width="200" height="200" style="width:100px; height:100px;"></canvas>
+    <h2>Rive Button A/B Test</h2>
+    <p>Hover and click each button to compare:</p>
+    <div class="buttons">
+      <div class="btn-test">
+        <canvas id="rive-a" width="200" height="200" style="width:100px; height:100px;"></canvas>
+        <label>A: button_potfolio_motionthis</label>
+      </div>
+      <div class="btn-test">
+        <canvas id="rive-b" width="200" height="200" style="width:100px; height:100px;"></canvas>
+        <label>B: test-button-intracrive</label>
+      </div>
+    </div>
     <div id="status">Loading Rive...</div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js"></script>
   <script>
     var el = document.getElementById('status');
-    var canvas = document.getElementById('rive-linkedin');
 
-    var r = new rive.Rive({
+    function log(msg) {
+      el.textContent += '\n' + msg;
+      console.log(msg);
+    }
+
+    // Button A — original
+    var canvasA = document.getElementById('rive-a');
+    var btnA = new rive.Rive({
       src: 'Icons/button_potfolio_motionthis.riv',
-      canvas: canvas,
+      canvas: canvasA,
       autoplay: true,
       stateMachine: 'State Machine 1',
       fit: rive.Fit.Contain,
       alignment: rive.Alignment.Center,
       onLoad: function() {
         setTimeout(function() {
-          r.resizeDrawingSurfaceToCanvas();
-          el.textContent = 'SUCCESS - Rive loaded!\n';
-          el.textContent += 'State machines: ' + JSON.stringify(r.stateMachineNames) + '\n';
-          el.textContent += 'Animations: ' + JSON.stringify(r.animationNames) + '\n';
-          el.style.color = 'green';
+          btnA.resizeDrawingSurfaceToCanvas();
+          log('[A] Loaded — SM: ' + JSON.stringify(btnA.stateMachineNames));
         }, 50);
       },
       onStateChange: function(event) {
-        el.textContent += 'State: ' + JSON.stringify(event.data) + '\n';
+        log('[A] State: ' + JSON.stringify(event.data));
       }
     });
+    canvasA.addEventListener('click', function() { log('[A] Click!'); });
 
-    canvas.addEventListener('click', function() {
-      el.textContent += 'Click detected!\n';
+    // Button B — new interactive
+    var canvasB = document.getElementById('rive-b');
+    var btnB = new rive.Rive({
+      src: 'Icons/test-button-intracrive.riv',
+      canvas: canvasB,
+      autoplay: true,
+      stateMachine: 'State Machine 1',
+      fit: rive.Fit.Contain,
+      alignment: rive.Alignment.Center,
+      onLoad: function() {
+        setTimeout(function() {
+          btnB.resizeDrawingSurfaceToCanvas();
+          var contents = btnB.contents;
+          if (contents) {
+            log('[B] Loaded — Artboards: ' + JSON.stringify(contents.artboards));
+          }
+          log('[B] SM: ' + JSON.stringify(btnB.stateMachineNames));
+          log('[B] Anims: ' + JSON.stringify(btnB.animationNames));
+        }, 50);
+      },
+      onStateChange: function(event) {
+        log('[B] State: ' + JSON.stringify(event.data));
+      }
     });
+    canvasB.addEventListener('click', function() { log('[B] Click!'); });
+
+    el.textContent = 'Rive runtime loaded. Waiting for files...';
   </script>
 </body>
 </html>
