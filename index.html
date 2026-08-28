@@ -439,8 +439,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
     <div id="iicons">
       <!-- LinkedIn (Rive) -->
-      <div class="ib" id="btn-li" title="LinkedIn" style="display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer;">
-        <canvas id="rive-linkedin" width="80" height="80" style="width:40px; height:40px;"></canvas>
+      <div id="btn-li" title="LinkedIn" style="width:40px; height:40px; cursor:pointer; pointer-events:none;">
+        <canvas id="rive-linkedin" width="80" height="80" style="width:40px; height:40px; pointer-events:auto;"></canvas>
       </div>
       <!-- Email -->
       <a class="ib" id="btn-em" href="#" title="MotionThis@gmail.com">
@@ -1014,7 +1014,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     var canvas = document.getElementById('rive-linkedin');
     if (!canvas) return;
     var linkedinButton = new rive.Rive({
-      src: 'Assets/button_potfolio_motionthis.riv',
+      src: 'Icons/button_potfolio_motionthis.riv',
       canvas: canvas,
       autoplay: true,
       stateMachines: ['State Machine 1'],
