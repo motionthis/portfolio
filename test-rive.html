@@ -14,14 +14,9 @@
     background: #EDECEC;
     font-family: sans-serif;
   }
-  .test-wrapper {
-    text-align: center;
-  }
-  canvas {
-    cursor: pointer;
-    border: 1px dashed #ccc;
-  }
-  #status { white-space: pre-wrap; text-align: left; max-width: 500px; margin: 20px auto; }
+  .test-wrapper { text-align: center; }
+  canvas { cursor: pointer; border: 1px dashed #ccc; }
+  #status { white-space: pre-wrap; text-align: left; max-width: 500px; margin: 20px auto; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -35,46 +30,31 @@
   <script src="https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js"></script>
   <script>
     var el = document.getElementById('status');
-
-    function log(msg) {
-      el.textContent += '\n' + msg;
-      console.log(msg);
-    }
-
-    log('Rive runtime version: ' + (rive.RuntimeLoader ? 'loaded' : 'unknown'));
+    var canvas = document.getElementById('rive-linkedin');
 
     var r = new rive.Rive({
       src: 'Icons/button_potfolio_motionthis.riv',
-      canvas: document.getElementById('rive-linkedin'),
+      canvas: canvas,
       autoplay: true,
+      stateMachine: 'State Machine 1',
       fit: rive.Fit.Contain,
       alignment: rive.Alignment.Center,
       onLoad: function() {
-        r.resizeDrawingSurfaceToCanvas();
-        log('SUCCESS - Rive file loaded');
-
-        var contents = r.contents;
-        if (contents) {
-          log('Artboards: ' + JSON.stringify(contents.artboards));
-        }
-
-        var names = r.stateMachineNames;
-        log('State machines found: ' + JSON.stringify(names));
-
-        var anims = r.animationNames;
-        log('Animations found: ' + JSON.stringify(anims));
-
-        // Try starting state machine by name
-        if (names && names.length > 0) {
-          r.play(names[0]);
-          log('Playing state machine: ' + names[0]);
-        }
-
-        el.style.color = 'green';
+        setTimeout(function() {
+          r.resizeDrawingSurfaceToCanvas();
+          el.textContent = 'SUCCESS - Rive loaded!\n';
+          el.textContent += 'State machines: ' + JSON.stringify(r.stateMachineNames) + '\n';
+          el.textContent += 'Animations: ' + JSON.stringify(r.animationNames) + '\n';
+          el.style.color = 'green';
+        }, 50);
       },
       onStateChange: function(event) {
-        log('State changed: ' + JSON.stringify(event.data));
+        el.textContent += 'State: ' + JSON.stringify(event.data) + '\n';
       }
+    });
+
+    canvas.addEventListener('click', function() {
+      el.textContent += 'Click detected!\n';
     });
   </script>
 </body>
