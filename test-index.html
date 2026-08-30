@@ -697,7 +697,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   /* ── Email ── */
   var u = 'motionthis';
   var d = 'gmail.com';
-  document.getElementById('btn-em').href = 'mai' + 'lto:' + u + '@' + d;
+  var emailEl = document.getElementById('btn-em');
+  if (emailEl) emailEl.href = 'mai' + 'lto:' + u + '@' + d;
 
   /* ── Elements ── */
   var identity = document.getElementById('identity');
