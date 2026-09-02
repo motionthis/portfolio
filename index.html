@@ -123,6 +123,16 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 .ib:nth-child(3) { animation-delay:0.10s; }
 .ib:nth-child(4) { animation-delay:0.15s; }
 
+/* Rive icon buttons — same entrance as .ib, visuals handled by Rive */
+.rive-btn {
+  opacity:0; transform:translateX(-14px);
+  animation:iconIn var(--dur) var(--ease) forwards;
+}
+.rive-btn:nth-child(1) { animation-delay:0.00s; }
+.rive-btn:nth-child(2) { animation-delay:0.05s; }
+.rive-btn:nth-child(3) { animation-delay:0.10s; }
+.rive-btn:nth-child(4) { animation-delay:0.15s; }
+
 @keyframes iconIn {
   to { opacity:1; transform:translateX(0); }
 }
@@ -438,37 +448,21 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     </div>
 
     <div id="iicons">
-      <!-- LinkedIn -->
-      <a class="ib" id="btn-li" href="https://www.linkedin.com/in/erfanazadehnia/" target="_blank" title="LinkedIn">
-        <svg width="20" height="20" viewBox="0 0 35 36" fill="none">
-          <path d="M27.708 4.375a3.333 3.333 0 0 1 2.917 2.917v20.416a3.333 3.333 0 0 1-2.917 2.917H7.292a3.333 3.333 0 0 1-2.917-2.917V7.292a3.333 3.333 0 0 1 2.917-2.917h20.416Zm-.729 22.604V19.25a4.558 4.558 0 0 0-4.558-4.754c-1.24 0-2.683.758-3.383 1.896v-1.62h-4.07v12.208h4.07v-7.19a2.083 2.083 0 1 1 4.166 0v7.19h3.775ZM10.033 12.483a2.458 2.458 0 1 0 0-4.914 2.458 2.458 0 0 0 0 4.914Zm2.028 14.496V14.773H8.02v12.206h4.04Z" fill="#000B28"/>
-        </svg>
-      </a>
-      <!-- Email -->
-      <a class="ib" id="btn-em" href="#" title="MotionThis@gmail.com">
-        <svg width="20" height="16" viewBox="0 0 33 26" fill="none">
-          <path d="M0 3.25C0 1.455 1.478 0 3.3 0h26.4C31.522 0 33 1.455 33 3.25v19.5C33 24.545 31.522 26 29.7 26H3.3C1.478 26 0 24.545 0 22.75V3.25Zm5.806 0L16.5 12.465 27.194 3.25H5.806ZM29.7 5.41 17.587 15.849a1.65 1.65 0 0 1-2.174 0L3.3 5.41V22.75h26.4V5.41Z" fill="#000B28"/>
-        </svg>
-      </a>
-      <!-- CV -->
-      <a class="ib" href="https://docs.google.com/document/d/1SpKWIvnQavojIAsakxFNdJD96WLiQep2rMVmg11NFPs/export?format=pdf" target="_blank" title="Resume">
-        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
-          <path d="M11.7 9.525a1.515 1.515 0 1 0 0-3.03 1.515 1.515 0 0 0 0 3.03Z" fill="#000B28"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7 10.035c-1.68 0-3.045 1.17-3.045 2.79v.765c0 .27.12.51.33.51h5.07c.21 0 .33-.24.33-.51v-.765c0-1.62-1.365-2.79-3.045-2.79ZM8.625 17.25c0-.65.525-1.125 1.125-1.125h10.5c.6 0 1.125.475 1.125 1.125 0 .649-.525 1.125-1.125 1.125H9.75c-.6 0-1.125-.476-1.125-1.125Zm0 4.5c0-.65.525-1.125 1.125-1.125h10.5c.6 0 1.125.475 1.125 1.125 0 .649-.525 1.125-1.125 1.125H9.75c-.6 0-1.125-.476-1.125-1.125Z" fill="#000B28"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 3.75A3 3 0 0 1 6.75.75h10.035a3 3 0 0 1 2.198.947l6.477 7.063c.538.575.79 1.326.79 2.04V26.25a3 3 0 0 1-3 3H6.75a3 3 0 0 1-3-3V3.75Zm13.034 0H6.75V26.25h16.5V10.788L16.784 3.75Z" fill="#000B28"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M16.785.75A1.5 1.5 0 0 1 18.285 2.25V9.3H24.75a1.5 1.5 0 0 1 0 3H16.785a1.5 1.5 0 0 1-1.5-1.5V2.25A1.5 1.5 0 0 1 16.785.75Z" fill="#000B28"/>
-        </svg>
-      </a>
-      <!-- Works toggle -->
-      <div class="ib" onclick="toggle()" title="Portfolio">
-        <svg width="17" height="17" viewBox="0 0 27 26" fill="none">
-          <path opacity="0.2" d="M13 .987C6.373.987 1 6.36 1 12.988S6.373 24.988 13 24.988s12-5.373 12-12S19.627.987 13 .987Z" fill="#000B28"/>
-          <path d="M26 23.988h-6.08A12.956 12.956 0 0 0 26 12.988C26 6.36 20.627.987 14 .987S2 6.36 2 12.988s5.373 12 12 12h12a1 1 0 0 0 0-2ZM2 12.988A11 11 0 1 1 24 12.988 11 11 0 0 1 2 12.988Z" fill="#000B28"/>
-          <circle cx="7" cy="13" r="2" fill="#000B28"/>
-          <circle cx="13" cy="7" r="2" fill="#000B28"/>
-          <circle cx="19" cy="13" r="2" fill="#000B28"/>
-          <circle cx="13" cy="19" r="2" fill="#000B28"/>
-        </svg>
+      <!-- LinkedIn (Rive) -->
+      <div class="rive-btn" title="LinkedIn" style="width:34px; height:34px; cursor:pointer; flex-shrink:0;">
+        <canvas id="rive-linkedin" width="68" height="68" style="width:34px; height:34px; display:block;"></canvas>
+      </div>
+      <!-- Email (Rive) -->
+      <div class="rive-btn" title="MotionThis@gmail.com" style="width:34px; height:34px; cursor:pointer; flex-shrink:0;">
+        <canvas id="rive-email" width="68" height="68" style="width:34px; height:34px; display:block;"></canvas>
+      </div>
+      <!-- Resume (Rive) -->
+      <div class="rive-btn" title="Resume" style="width:34px; height:34px; cursor:pointer; flex-shrink:0;">
+        <canvas id="rive-resume" width="68" height="68" style="width:34px; height:34px; display:block;"></canvas>
+      </div>
+      <!-- Portfolio / Works toggle (Rive) -->
+      <div class="rive-btn" title="Portfolio" style="width:34px; height:34px; cursor:pointer; flex-shrink:0;">
+        <canvas id="rive-portfolio" width="68" height="68" style="width:34px; height:34px; display:block;"></canvas>
       </div>
     </div>
 
@@ -713,7 +707,8 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   /* ── Email ── */
   var u = 'motionthis';
   var d = 'gmail.com';
-  document.getElementById('btn-em').href = 'mai' + 'lto:' + u + '@' + d;
+  var emailEl = document.getElementById('btn-em');
+  if (emailEl) emailEl.href = 'mai' + 'lto:' + u + '@' + d;
 
   /* ── Elements ── */
   var identity = document.getElementById('identity');
@@ -1008,7 +1003,62 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   };
 }());
 
-/* ── Rive LinkedIn Button (disabled — testing on test-rive.html) ── */
+/* ── Rive Icon Buttons ── */
+(function() {
+  var RIV_SRC = 'Icons/portfolio-buttons.riv';
+
+  var buttons = [
+    {
+      canvasId: 'rive-linkedin',
+      artboard: 'LinkedIn-BTN',
+      onClick: function() { window.open('https://www.linkedin.com/in/erfanazadehnia/', '_blank'); }
+    },
+    {
+      canvasId: 'rive-email',
+      artboard: 'Email-BTN',
+      onClick: function() { window.location.href = 'mailto:motionthis@gmail.com'; }
+    },
+    {
+      canvasId: 'rive-resume',
+      artboard: 'Resume-BTN',
+      onClick: function() { window.open('https://docs.google.com/document/d/1SpKWIvnQavojIAsakxFNdJD96WLiQep2rMVmg11NFPs/export?format=pdf', '_blank'); }
+    },
+    {
+      canvasId: 'rive-portfolio',
+      artboard: 'Portfolio-BTN',
+      onClick: function() { if (typeof toggle === 'function') toggle(); }
+    }
+  ];
+
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js';
+  s.onload = function() {
+    buttons.forEach(function(cfg) {
+      var canvas = document.getElementById(cfg.canvasId);
+      if (!canvas) return;
+
+      var instance = new rive.Rive({
+        src: RIV_SRC,
+        canvas: canvas,
+        artboard: cfg.artboard,
+        autoplay: true,
+        autoBind: true,
+        stateMachine: 'State Machine 1',
+        fit: rive.Fit.Contain,
+        alignment: rive.Alignment.Center,
+        onLoad: function() {
+          setTimeout(function() { instance.resizeDrawingSurfaceToCanvas(); }, 50);
+        },
+        onLoadError: function(e) {
+          console.error('[Rive] Failed to load artboard "' + cfg.artboard + '":', e);
+        }
+      });
+
+      canvas.addEventListener('click', cfg.onClick);
+    });
+  };
+  document.body.appendChild(s);
+}());
 </script>
 </body>
 </html>
