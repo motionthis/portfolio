@@ -123,15 +123,18 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 .ib:nth-child(3) { animation-delay:0.10s; }
 .ib:nth-child(4) { animation-delay:0.15s; }
 
-/* Rive icon buttons — same entrance as .ib, visuals handled by Rive */
+/* Rive icon buttons — same entrance as .ib, but held until the graphics
+   have actually rendered so the slide isn't wasted on empty canvases */
 .rive-btn {
   opacity:0; transform:translateX(-14px);
+}
+#iicons.rive-ready .rive-btn {
   animation:iconIn var(--dur) var(--ease) forwards;
 }
-.rive-btn:nth-child(1) { animation-delay:0.00s; }
-.rive-btn:nth-child(2) { animation-delay:0.05s; }
-.rive-btn:nth-child(3) { animation-delay:0.10s; }
-.rive-btn:nth-child(4) { animation-delay:0.15s; }
+#iicons.rive-ready .rive-btn:nth-child(1) { animation-delay:0.00s; }
+#iicons.rive-ready .rive-btn:nth-child(2) { animation-delay:0.05s; }
+#iicons.rive-ready .rive-btn:nth-child(3) { animation-delay:0.10s; }
+#iicons.rive-ready .rive-btn:nth-child(4) { animation-delay:0.15s; }
 
 @keyframes iconIn {
   to { opacity:1; transform:translateX(0); }
@@ -422,6 +425,9 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   white-space:nowrap; pointer-events:none;
 }
 </style>
+<!-- Preload Rive runtime + button file so icons are ready before the entrance animation -->
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js" as="script" crossorigin>
+<link rel="preload" href="Icons/portfolio-buttons.riv" as="fetch" crossorigin>
 </head>
 <body>
 
@@ -1030,12 +1036,29 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     }
   ];
 
+  /* Reveal the row once every button has drawn, so the slide-in plays on
+     visible icons rather than empty canvases. Falls back on a timeout so a
+     slow/failed load can never leave the icons hidden. */
+  var pending = buttons.length;
+  var revealed = false;
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    var row = document.getElementById('iicons');
+    if (row) row.classList.add('rive-ready');
+  }
+  function buttonReady() {
+    pending--;
+    if (pending <= 0) reveal();
+  }
+  setTimeout(reveal, 2500);
+
   var s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js';
   s.onload = function() {
     buttons.forEach(function(cfg) {
       var canvas = document.getElementById(cfg.canvasId);
-      if (!canvas) return;
+      if (!canvas) { buttonReady(); return; }
 
       var instance = new rive.Rive({
         src: RIV_SRC,
@@ -1047,16 +1070,23 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         fit: rive.Fit.Contain,
         alignment: rive.Alignment.Center,
         onLoad: function() {
-          setTimeout(function() { instance.resizeDrawingSurfaceToCanvas(); }, 50);
+          /* next frame, so `instance` is guaranteed assigned — imperceptible
+             vs. a fixed setTimeout delay */
+          requestAnimationFrame(function() {
+            instance.resizeDrawingSurfaceToCanvas();
+            buttonReady();
+          });
         },
         onLoadError: function(e) {
           console.error('[Rive] Failed to load artboard "' + cfg.artboard + '":', e);
+          buttonReady();
         }
       });
 
       canvas.addEventListener('click', cfg.onClick);
     });
   };
+  s.onerror = reveal;
   document.body.appendChild(s);
 }());
 </script>
