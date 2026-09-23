@@ -745,7 +745,10 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
     pwInput.value = '';
     pwBox.classList.remove('shake');
     pwBox.classList.add('visible');
-    setTimeout(function () { pwInput.focus(); }, 400);
+    /* iOS only opens the keyboard if focus() happens inside the user gesture
+       that triggered it — a setTimeout breaks that chain and the field would
+       appear with no keyboard. Focus synchronously instead. */
+    pwInput.focus();
   }
 
   function hidePassword() {
@@ -1121,6 +1124,29 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
   }
   setTimeout(reveal, 2500);
 
+  /* Rive's listeners call preventDefault on touch events, which cancels the
+     click the browser would otherwise synthesise — so on a phone a plain
+     'click' handler never fires. pointerup is a real event, not a synthesised
+     one, so it survives. Guard on pointerdown landing on the same element so
+     a drag that ends over the button doesn't count as a tap. */
+  function onActivate(el, handler) {
+    var armed = false;
+    el.addEventListener('pointerdown', function (e) {
+      armed = (e.pointerType !== 'mouse' || e.button === 0);
+    });
+    el.addEventListener('pointercancel', function () { armed = false; });
+    el.addEventListener('pointerup', function (e) {
+      if (!armed) return;
+      armed = false;
+      e.preventDefault();
+      handler();
+    });
+    /* Keyboard and any environment without pointer events */
+    el.addEventListener('click', function (e) {
+      if (e.detail === 0) handler();
+    });
+  }
+
   var s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/@rive-app/canvas@latest/rive.js';
   s.onload = function() {
@@ -1137,6 +1163,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         stateMachine: 'State Machine 1',
         fit: rive.Fit.Contain,
         alignment: rive.Alignment.Center,
+        isTouchScrollEnabled: true,
         onLoad: function() {
           /* next frame, so `instance` is guaranteed assigned — imperceptible
              vs. a fixed setTimeout delay */
@@ -1151,7 +1178,7 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
         }
       });
 
-      canvas.addEventListener('click', cfg.onClick);
+      onActivate(canvas, cfg.onClick);
     });
   };
   s.onerror = reveal;
