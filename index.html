@@ -438,7 +438,9 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 <!-- ── VIDEO LIGHTBOX (tablet/phone) ── -->
 <div id="video-modal" role="dialog" aria-modal="true">
   <button id="video-modal-close" aria-label="Close video">✕</button>
-  <video id="video-modal-player" controls playsinline autoplay loop></video>
+  <!-- muted is required for autoplay on iOS; these clips carry no audio track
+       anyway, so nothing is lost by it -->
+  <video id="video-modal-player" controls playsinline autoplay muted loop></video>
 </div>
 
 <div id="app">
@@ -1020,9 +1022,19 @@ html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; }
 
     function openModal(src) {
       modalPlayer.src = src;
+      modalPlayer.muted = true;   /* belt and braces — iOS checks the property,
+                                     not just the attribute, at play() time */
       modal.classList.add('show');
       document.body.style.overflow = 'hidden';
-      modalPlayer.play().catch(function(){});
+      /* Wait for enough data before playing, otherwise Safari can reject the
+         play() call on a source that has only just been assigned. */
+      var start = function () { modalPlayer.play().catch(function () {}); };
+      if (modalPlayer.readyState >= 2) {
+        start();
+      } else {
+        modalPlayer.addEventListener('loadeddata', start, { once: true });
+        modalPlayer.load();
+      }
     }
     function closeModal() {
       modalPlayer.pause();
